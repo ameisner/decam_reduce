@@ -1,5 +1,12 @@
 # reduce DECam data using the LSST science pipeline
 
+# environment configuration
+
+Add the `decam_reduce/py` directory to your PYTHONPATH. Then you should be able to do stuff like the following:
+
+
+
+
     python proc_1night.py --help
     usage: proc_1night.py [-h] [--repo_name REPO_NAME]
                           [--staging_script_name STAGING_SCRIPT_NAME]
