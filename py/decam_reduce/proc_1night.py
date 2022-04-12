@@ -68,8 +68,9 @@ def download_images(df, outdir):
     # set of calibration images to download
 
     # could parallelize for speed-up?
-    
-    assert(os.path.exists(outdir))
+
+    if not os.path.exists(outdir):
+        os.mkdir(outdir)
 
     for i in range(len(df)):
         print(i+1, ' of ', len(df))
@@ -87,18 +88,14 @@ def download_images(df, outdir):
 
 def download_raw_science(df):
     print('DOWNLOADING RAW SCIENCE FRAMES')
-    outdir = 'raw'
-    if not os.path.exists(outdir):
-        os.mkdir(outdir)
 
+    outdir = 'raw' # make this not be hardcoded?
     download_images(df, outdir)
 
 def download_calibs(df):
     print('DOWNLOADING NIGHTLY MASTER CALIBRATIONS')
-    outdir = 'flats_biases'
-    if not os.path.exists(outdir):
-        os.mkdir(outdir)
 
+    outdir = 'flats_biases' # make this not be hardcoded
     download_images(df, outdir)
 
 def download_1shard(url, outname):
@@ -162,7 +159,9 @@ def write_staging_script(outname):
 
     cmds.append('ingestCalibs.py DATA --calib DATA/CALIB flats_biases/*.fits.fz --validity 999 --mode=link')
 
-    cmds.append('ingestDefects.py DATA /data0/ameisner/lsst_stack_v19_0_0/stack/miniconda3-4.7.10-4d7b902/Linux64/obs_decam_data/19.0.0/decam/defects --calib DATA/CALIB')
+    par = common.decam_params()
+    cmds.append('ingestDefects.py DATA ' + par['defect_basedir'] + \
+        ' --calib DATA/CALIB')
 
     cmds.append('ln -s ps1_pv3_3pi_20170110 DATA/ref_cats/ps1_pv3_3pi_20170110')
 

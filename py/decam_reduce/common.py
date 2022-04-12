@@ -7,6 +7,9 @@ throughout the codebase. Goal is to factor out special numbers.
 
 """
 
+from pkg_resources import resource_filename
+import os
+
 def decam_params():
     """
     Set of configuration parameters relevant to DECam reductions.
@@ -24,6 +27,8 @@ def decam_params():
 
     par = {'max_pixel_radius_deg': 1.0923879,
            'shard_cone_margin_deg': 0.1,
-           'min_exptime_s': 1.0}
+           'min_exptime_s': 1.0,
+           'defect_basedir' : resource_filename('decam_reduce',
+                                  os.path.join('data', 'defects'))}
 
     return par
