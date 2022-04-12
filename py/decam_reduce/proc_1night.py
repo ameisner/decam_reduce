@@ -321,10 +321,31 @@ def add_exec_permission(fname):
     st = os.stat(fname)
     os.chmod(fname, st.st_mode | stat.S_IXUSR)
 
-# move launch.sh, stage.sh defaults into common.py eventually...
 def _proc(caldat, limit=None, staging_script_name='stage.sh',
           launch_script_name='launch.sh', do_ps1_download=False):
+    """
+    Prepare processing for a night of raw DECam data.
 
+    Parameters
+    ----------
+        caldat : str
+            Observing night in format YYYY-MM-DD.
+        limit : int, optional
+            Only prepare to process first limit raw science exposures (mainly
+            for testing purposes).
+        staging_script_name : str, optional
+            Name of staging shell script to create/write.
+        launch_script_name : str, optional
+            Name of launch shell script to create/write.
+        do_ps1_download : bool, optional
+            Whether or not to download PS1 shards from the internet, or
+            find them on local disk.
+
+    Notes
+    -----
+        Move launch.sh, stage.sh defaults into common.py eventually...
+
+    """
     print('WORKING ON NIGHT ' + caldat)
 
     nightsum = query_night('2018-09-05')
