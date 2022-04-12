@@ -98,8 +98,6 @@ def download_1shard(url, outname):
     open(outname, 'wb').write(r.content)
 
 def download_ps1_shards(ras, decs, nmp=8):
-    import get_shards
-
     # check that ras, decs have same number of elements?
 
     # get shards list for each ra, dec then do downloads for the
@@ -108,8 +106,8 @@ def download_ps1_shards(ras, decs, nmp=8):
     margin = 0.1 # deg, not sure...
     tables = []
     for i in range(len(ras)):
-        shards = get_shards.getShards_decam_pointing(ras[i], decs[i], depth=7,
-                                                     margin=margin)
+        shards = util.getShards_decam_pointing(ras[i], decs[i], depth=7,
+                                               margin=margin)
         tables.append(shards)
 
     table = vstack(tables)
