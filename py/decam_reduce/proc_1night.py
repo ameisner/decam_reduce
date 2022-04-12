@@ -209,7 +209,6 @@ def download_ps1_shards(ras, decs, nmp=8):
         outname = os.path.join(outdir, _name)
         download_1shard(url, outname)
 
-
 # get list of files from /short API
 # get unique list of filters (maybe not strictly necessary)
 # download/ingest the calibs (flats) for those filters
@@ -277,6 +276,21 @@ def write_launch_script(outname):
     add_exec_permission(outname)
 
 def add_exec_permission(fname):
+    """
+    Add executable permission to a file.
+
+    Parameters
+    ----------
+        fname : str
+            Name of the file for which to add executable permission.
+
+    Notes
+    -----
+        Should this be made to work with an input consisting of a list of
+        file names?
+
+    """
+
     st = os.stat(fname)
     os.chmod(fname, st.st_mode | stat.S_IXUSR)
 
