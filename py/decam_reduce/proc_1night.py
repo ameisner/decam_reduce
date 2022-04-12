@@ -147,7 +147,7 @@ def download_ps1_shards(ras, decs, nmp=8):
 # create script for building butler repo and also the processCcd.py command
 # use DECaLS night = 2018-09-05 as a test case
 
-def write_staging_script(outname):
+def write_staging_script(outname, do_ps1_download=False):
     cmds = []
 
     cmds.append('mkdir DATA')
@@ -163,7 +163,10 @@ def write_staging_script(outname):
     cmds.append('ingestDefects.py DATA ' + par['defect_basedir'] + \
         ' --calib DATA/CALIB')
 
-    cmds.append('ln -s ps1_pv3_3pi_20170110 DATA/ref_cats/ps1_pv3_3pi_20170110')
+    ref_cat_dir = 'ps1_pv3_3pi_20170110' if do_ps1_download \
+        else par['ps1_fullsky_dir']
+
+    cmds.append('ln -s ' + ref_cat_dir + ' DATA/ref_cats/ps1_pv3_3pi_20170110')
 
     _cmds = ''
     for cmd in cmds:
@@ -187,8 +190,9 @@ def add_exec_permission(fname):
     st = os.stat(fname)
     os.chmod(fname, st.st_mode | stat.S_IXUSR)
 
+# move launch.sh, stage.sh defaults into common.py eventually...
 def _proc(caldat, limit=None, staging_script_name='stage.sh',
-          launch_script_name='launch.sh'):
+          launch_script_name='launch.sh', do_ps1_download=False):
 
     print('WORKING ON NIGHT ' + caldat)
 
@@ -205,11 +209,14 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh',
 
     download_calibs(calib)
 
-    write_staging_script(staging_script_name)
+    write_staging_script(staging_script_name, do_ps1_download=do_ps1_download)
     write_launch_script(launch_script_name)
 
-    download_ps1_shards(np.array(raw['ra_min']),
-                        np.array(raw['dec_min']))
+    if do_ps1_download:
+        download_ps1_shards(np.array(raw['ra_min']),
+                            np.array(raw['dec_min']))
+    else:
+        print('ATTEMPTING TO USE PS1 REFERENCE CATALOGS ALREADY ON DISK')
     
 if __name__ == "__main__":
     descr = 'process a night of raw DECam data'
@@ -243,8 +250,12 @@ if __name__ == "__main__":
     parser.add_argument('--propid', default=None, type=str,
                         help="only process raw science data with this propid")
 
+    parser.add_argument('--do_ps1_download', default=False, type=bool,
+                        help="download PS1 shard files from the internet?")
+
     args = parser.parse_args()
 
     _proc(args.caldat[0], limit=args.limit,
           staging_script_name=args.staging_script_name,
-          launch_script_name=args.launch_script_name)
+          launch_script_name=args.launch_script_name,
+          do_ps1_download=args.do_ps1_download)
