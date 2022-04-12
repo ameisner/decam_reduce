@@ -4,6 +4,18 @@
 
 Add the `decam_reduce/py` directory to your PYTHONPATH. Then you should be able to do stuff like the following:
 
+```
+In [1]: import decam_reduce
+
+In [2]: ?decam_reduce
+Type:        module
+String form: <module 'decam_reduce' from '/home/ameisner/decam_reduce/py/decam_reduce/__init__.py'>
+File:        ~/decam_reduce/py/decam_reduce/__init__.py
+Docstring:  
+decam_reduce
+============
+A setup for reducing raw DECam images with the LSST pipeline.
+```
 # full pipeline help
 
     python proc_1night.py --help
