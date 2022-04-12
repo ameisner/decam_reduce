@@ -1,0 +1,70 @@
+# %ECSV 0.9
+# ---
+# datatype:
+# - name: x0
+#   unit: pix
+#   datatype: int32
+#   description: X coordinate of bottom left corner of box
+# - name: y0
+#   unit: pix
+#   datatype: int32
+#   description: Y coordinate of bottom left corner of box
+# - name: width
+#   unit: pix
+#   datatype: int32
+#   description: X extent of box
+# - name: height
+#   unit: pix
+#   datatype: int32
+#   description: Y extent of box
+# meta: !!omap
+# - OBSTYPE: defects
+# - INSTRUME: decam
+# - DETECTOR: 33
+# - CALIBDATE: '2015-01-05T01:15:00'
+# - FILTER: null
+# - DEFECTTYPE: BADPIXEL
+# - DEFECTS_SCHEMA: Simple
+# - DEFECTS_SCHEMA_VERSION: 1
+# - DATE: '2019-06-11T17:43:31.262087'
+# - CALIB_CREATION_DATE: '2019-06-11'
+# - CALIB_CREATION_TIME: '17:43:31'
+# schema: astropy-2.0
+x0 y0 width height
+1814 34 1 1
+1814 94 1 1
+1814 154 1 1
+1814 214 1 1
+1814 274 1 1
+1814 334 1 1
+1814 394 1 1
+1814 454 1 1
+1814 514 1 1
+1814 574 1 1
+1814 634 1 1
+1814 694 1 1
+1814 754 1 1
+1814 814 1 1
+1814 874 1 1
+394 913 2 1
+394 914 1 1
+1814 934 1 1
+1814 994 1 1
+209 1319 1 1
+278 1321 1 2
+1447 1375 1 1
+302 3499 4 1
+1904 3582 1 2
+0 0 2048 15
+0 15 138 100
+1902 15 146 99
+2022 114 26 3982
+0 115 25 3981
+1813 1049 3 11
+1814 1060 1 3036
+1917 2047 105 132
+25 2088 115 145
+1912 3973 110 123
+25 3995 106 101
+131 4081 1683 15
+1815 4081 97 15
