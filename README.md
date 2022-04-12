@@ -60,7 +60,7 @@ setuptools
                           [--do_ps1_download DO_PS1_DOWNLOAD]
                           caldat
 
-    process a night of raw DECam data
+    prepare processing for a night of raw DECam data
 
     positional arguments:
       caldat                observing night in YYYY-MM-DD format
