@@ -31,6 +31,12 @@ decam_reduce.util
 A collection of DECam reduction related utility functions.
 ```
 
+If you intend to use an existing local copy of the Pan-STARRS reference catalog shards, then you need to specify the path to them via an environment variable called `PS1_FULLSKY_DIR`:
+
+```
+export PS1_FULLSKY_DIR=$DATA/ps1_pv3_3pi_20170110
+```
+
 # dependencies
 
 A `requirements.txt` file has been auto-generated with `pipreqs`. Currently, the necessary dependencies are:
