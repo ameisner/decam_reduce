@@ -57,3 +57,7 @@ requests
       --limit LIMIT         process only first limit exposures
       --filter FILTER       only process raw science data with this filter
       --propid PROPID       only process raw science data with this propid
+
+# example launch script
+
+An example launch script is available as `bin/2018-09-05.sh`.
