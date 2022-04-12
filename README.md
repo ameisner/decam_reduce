@@ -17,6 +17,18 @@ decam_reduce
 A setup for reducing raw DECam images with the LSST pipeline.
 In [3]: import decam_reduce.util as util
 ```
+
+# dependencies
+
+A `requirements.txt` has been auto-generated with `pipreqs`. Currently, the necessary dependencies are:
+
+```
+astropy
+numpy
+pandas
+requests
+```
+
 # full pipeline help
 
     python proc_1night.py --help
