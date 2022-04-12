@@ -21,8 +21,20 @@ import stat
 from multiprocessing import Pool
 
 def query_night(night):
-    # query the /short api
-    # handling of failed queries? retry in that case?
+    """
+    Issue Astro Data Archive query to get a nightly list of DECam images.
+
+    Parameters
+    ----------
+        night : str
+            Observing night in format YYYY-MM-DD.
+
+    Notes
+    -----
+        Queries the Astro Data Archive /short API.
+        Handling of failed queries? Retry in that case?
+
+    """
 
     url_short = 'https://astroarchive.noirlab.edu/api/short/ct4m/decam/' + \
                 night + '/'
