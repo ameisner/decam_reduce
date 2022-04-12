@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+"""
+decam_reduce.proc_1night
+========================
+
+Pipeline driver for preparing reductions of one observing night of DECam data.
+
+"""
+
 import argparse
 import requests
 import decam_reduce.util as util
