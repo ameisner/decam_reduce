@@ -253,6 +253,21 @@ def write_staging_script(outname, do_ps1_download=False):
     add_exec_permission(outname)
 
 def write_launch_script(outname):
+    """
+    Create a launch script for performing reduction with the LSST pipeline.
+
+    Parameters
+    ----------
+        outname : str
+            Name of the shell script to be written.
+
+    Notes
+    -----
+        Doesn't return anything, but does attempt to write a file.
+        Needs work in order to propagate/allow various options for the
+        eventual processCcd.py command.
+
+    """
 
     cmd = 'processCcd.py DATA --calib DATA/CALIB --rerun processCcdOutputs --id --longlog -j 20'
 
@@ -294,7 +309,7 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh',
         print('ATTEMPTING TO USE PS1 REFERENCE CATALOGS ALREADY ON DISK')
     
 if __name__ == "__main__":
-    descr = 'process a night of raw DECam data'
+    descr = 'prepare processing for a night of raw DECam data'
 
     parser = argparse.ArgumentParser(description=descr)
 
