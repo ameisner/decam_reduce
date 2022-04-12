@@ -87,10 +87,25 @@ def select_mastercal(nightsum):
     return result
 
 def download_images(df, outdir):
-    # df could be either the set of raw science exposures or
-    # set of calibration images to download
+    """
+    Download a list of images based on their URL's.
 
-    # could parallelize for speed-up?
+    Parameters
+    ----------
+        df : pandas.core.frame.DataFrame
+            pandas DataFrame. Should have a nonzero number of rows and
+            columns 'url', 'archive_filename'
+        outdir : str
+            Output directory into which to write the downloaded images.
+
+    Notes
+    -----
+        df could be, for instance, either a set of raw science exposures or a
+        set of calibration images to download.
+
+        Could parallelize for speed-up? At the risk of getting blacklisted...
+
+    """
 
     if not os.path.exists(outdir):
         os.mkdir(outdir)
