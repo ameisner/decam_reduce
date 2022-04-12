@@ -1,3 +1,11 @@
+"""
+decam_reduce.util
+=================
+
+A collection of DECam reduction related utility functions.
+
+"""
+
 from astropy.table import Table
 
 def full_filter_name(filter):
