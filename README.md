@@ -31,7 +31,7 @@ decam_reduce.util
 A collection of DECam reduction related utility functions.
 ```
 
-If you intend to use an existing local copy of the Pan-STARRS reference catalog shards, then you need to specify the path to them via an environment variable called `PS1_FULLSKY_DIR`:
+If you intend to use an existing local copy of the Pan-STARRS reference catalog shards, then you need to specify the path to them via an environment variable called `PS1_FULLSKY_DIR`, for instance:
 
 ```
 export PS1_FULLSKY_DIR=$DATA/ps1_pv3_3pi_20170110
@@ -57,6 +57,7 @@ setuptools
                           [--launch_script_name LAUNCH_SCRIPT_NAME]
                           [--multiproc MULTIPROC] [--limit LIMIT]
                           [--filter FILTER] [--propid PROPID]
+                          [--do_ps1_download DO_PS1_DOWNLOAD]
                           caldat
 
     process a night of raw DECam data
@@ -77,6 +78,8 @@ setuptools
       --limit LIMIT         process only first limit exposures
       --filter FILTER       only process raw science data with this filter
       --propid PROPID       only process raw science data with this propid
+      --do_ps1_download DO_PS1_DOWNLOAD
+                            download PS1 shard files from the internet?
 
 # example launch script
 
