@@ -154,6 +154,26 @@ def download_calibs(df):
     download_images(df, outdir)
 
 def download_1shard(url, outname):
+    """
+    Download one reference catalog file using requests.
+
+    Parameters
+    ----------
+        url : str
+            Download URL.
+        outname : str
+            Output file name to be written.
+
+    Notes
+    -----
+        No outputs, but attempts to download files to disk.
+        Perhaps an alternative way of doing this would be to issue a wget
+        command. Not sure about trade-offs with that (would wget be faster?).
+        Is it assumed that the output directory corresponding to outname
+        already exists?
+
+    """
+
     r = requests.get(url, allow_redirects=True)
     open(outname, 'wb').write(r.content)
 
