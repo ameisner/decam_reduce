@@ -61,6 +61,21 @@ def select_raw_science(nightsum, min_exptime_s=None):
     return result
 
 def select_mastercal(nightsum):
+    """
+    Select the master calibration records for an observing night.
+
+    Parameters
+    ----------
+        nightsum : pandas.core.frame.DataFrame
+            Observing night summary DataFrame from /short API query.
+
+    Returns
+    -------
+        result : pandas.core.frame.DataFrame
+            Subset of rows of input DataFrame corresponding to mastercal
+            dome flats and zeros.
+
+    """
 
     keep = (nightsum['proc_type'] == 'mastercal') & \
            (nightsum['prod_type'] == 'image') & \
