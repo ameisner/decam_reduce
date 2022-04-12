@@ -249,6 +249,22 @@ def download_ps1_shards(ras, decs, nmp=8):
 # use DECaLS night = 2018-09-05 as a test case
 
 def write_staging_script(outname, do_ps1_download=False):
+    """
+    Create a staging script that prepares for reductions with the LSST pipeline.
+
+    Parameters
+    ----------
+        outname : str
+            Name of the shell script to be written.
+
+    Notes
+    -----
+        Doesn't return anything, but does attempt to write a file.
+        Probably needs work in order to propagate/allow various options for the
+        underlying commands.
+
+    """
+
     cmds = []
 
     cmds.append('mkdir DATA')
