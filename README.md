@@ -1,5 +1,7 @@
 # reduce DECam data using the LSST science pipeline
 
+This pipeline is being developed with Python version Python 3.7.2.
+
 # environment configuration
 
 Add the `decam_reduce/py` directory to your PYTHONPATH. Then you should be able to do stuff like the following:
