@@ -204,11 +204,30 @@ def download_1shard(url, outname):
     r = requests.get(url, allow_redirects=True)
     open(outname, 'wb').write(r.content)
 
-def download_ps1_shards(ras, decs, nmp=8):
-    # check that ras, decs have same number of elements?
+def download_ps1_shards(ras, decs, nmp=None):
+    """
+    Download PS1 catalogs for a list of DECam pointing (RA, Dec) field centers.
 
-    # get shards list for each ra, dec then do downloads for the
-    # unique set
+    Parameters
+    ----------
+        ras : list
+            List of DECam field center RA values in decimal degrees. Must
+            have same number of elements as decs input.
+        decs : list
+            List of DECam field center Dec values in decimal degrees. Must
+            have same number of elements as ras input.
+        nmp : int, optional
+            Number of multiprocessing processes to use. Currently not yet
+            implemented, and may be a bad idea to implement from the
+            perspective of avoiding getting blacklisted.
+
+    Notes
+    -----
+        Add a check that ras, decs have same number of elements?
+        Gets shards list for each ra, dec then does downloads for the unique
+        set.
+
+    """
 
     par = common.decam_params()
     margin = par['shard_cone_margin_deg'] # deg, not sure...
@@ -222,6 +241,7 @@ def download_ps1_shards(ras, decs, nmp=8):
 
     shards = np.unique(table['shard'])
 
+    # this should be extracted to common.py
     base_url = 'http://tigress-web.princeton.edu/~pprice/ps1_pv3_3pi_20170110/'
 
     outdir = 'ps1_pv3_3pi_20170110'
@@ -362,6 +382,7 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh',
         Move launch.sh, stage.sh defaults into common.py eventually...
 
     """
+
     print('WORKING ON NIGHT ' + caldat)
 
     nightsum = query_night('2018-09-05')
