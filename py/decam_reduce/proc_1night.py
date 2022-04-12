@@ -2,7 +2,7 @@
 
 import argparse
 import requests
-import full_decam_filter_name
+import decam_reduce.util as util
 import json
 import os
 import pandas as pd
