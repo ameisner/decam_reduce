@@ -22,7 +22,7 @@ def query_night(night):
 
     return nightsum
 
-def select_raw_science(nightsum, min_exptime_s=1.0):
+def select_raw_science(nightsum, min_exptime_s=None):
 
     # nightsum is a pandas dataframe of the sort that would be returned
     #     by query_night
@@ -32,6 +32,13 @@ def select_raw_science(nightsum, min_exptime_s=1.0):
     # proc_type == raw
     # prod_type == image
     # sort the output by something? by EXPID? looks like EXPID isn't available
+
+   par = common.decam_params()
+
+   # if user really wants no min exptime, they should specify either
+   # a value <= 0 rather than None...
+   if min_exptime_s is None:
+       min_exptime_s = par['min_exptime_s']
 
     keep = (nightsum['proc_type'] == 'raw') & \
            (nightsum['prod_type'] == 'image') & \

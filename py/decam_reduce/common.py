@@ -23,6 +23,7 @@ def decam_params():
     """
 
     par = {'max_pixel_radius_deg': 1.0923879,
-           'shard_cone_margin_deg': 0.1}
+           'shard_cone_margin_deg': 0.1,
+           'min_exptime_s': 1.0}
 
     return par
