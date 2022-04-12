@@ -43,15 +43,30 @@ def query_night(night):
     return nightsum
 
 def select_raw_science(nightsum, min_exptime_s=None):
+    """
+    Select raw science frames.
 
-    # nightsum is a pandas dataframe of the sort that would be returned
-    #     by query_night
-    # filter the data based on some min exposure time
-    # needs to be a science frame (OBSTYPE == 'object' ?)
-    # for now restrict to u, g, r, i, z, Y (?)
-    # proc_type == raw
-    # prod_type == image
-    # sort the output by something? by EXPID? looks like EXPID isn't available
+    Parameters
+    ----------
+        nightsum : pandas.core.frame.DataFrame
+            Night summary DataFrame of the sort that would be returned by
+            the query_night function. Needs to have columns 'proc_type',
+            'prod_type', 'obs_type', 'exposure', 'original_filename'.
+        min_exptime_s : float
+            Minimum exposure time in seconds to consider reducing. Default
+            value is obtained from the set of parameters in common.py.
+
+    Returns
+    -------
+        result : pandas.core.frame.DataFrame
+            Filtered version of input DataFrame.
+
+    Notes
+    -----
+        Restrict to u, g, r, i, z, Y ?
+        What is the right quantity (if any) to sort the output by?
+
+    """
 
     par = common.decam_params()
 
