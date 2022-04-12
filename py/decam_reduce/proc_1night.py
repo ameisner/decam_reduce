@@ -33,12 +33,12 @@ def select_raw_science(nightsum, min_exptime_s=None):
     # prod_type == image
     # sort the output by something? by EXPID? looks like EXPID isn't available
 
-   par = common.decam_params()
+    par = common.decam_params()
 
-   # if user really wants no min exptime, they should specify either
-   # a value <= 0 rather than None...
-   if min_exptime_s is None:
-       min_exptime_s = par['min_exptime_s']
+    # if user really wants no min exptime, they should specify either
+    # a value <= 0 rather than None...
+    if min_exptime_s is None:
+        min_exptime_s = par['min_exptime_s']
 
     keep = (nightsum['proc_type'] == 'raw') & \
            (nightsum['prod_type'] == 'image') & \
