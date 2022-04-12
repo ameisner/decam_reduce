@@ -16,6 +16,16 @@ decam_reduce
 ============
 A setup for reducing raw DECam images with the LSST pipeline.
 In [3]: import decam_reduce.util as util
+
+In [4]: ?util
+Type:        module
+String form: <module 'decam_reduce.util' from '/home/ameisner/decam_reduce/py/decam_reduce/util.py'>
+File:        ~/decam_reduce/py/decam_reduce/util.py
+Docstring:  
+decam_reduce.util
+=================
+
+A collection of DECam reduction related utility functions.
 ```
 
 # dependencies
