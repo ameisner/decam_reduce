@@ -38,6 +38,7 @@ astropy
 numpy
 pandas
 requests
+setuptools
 ```
 
 # full pipeline help
