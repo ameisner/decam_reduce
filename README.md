@@ -15,6 +15,7 @@ Docstring:
 decam_reduce
 ============
 A setup for reducing raw DECam images with the LSST pipeline.
+In [3]: import decam_reduce.util as util
 ```
 # full pipeline help
 
