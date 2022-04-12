@@ -6,6 +6,8 @@ A collection of DECam reduction related utility functions.
 
 """
 
+import decam_reduce.common as common
+
 from astropy.table import Table
 
 def full_filter_name(filter):
@@ -141,7 +143,10 @@ def getShards_decam_pointing(ra, dec, depth=7, margin=0.0):
     # maximum angular radius of any DECam detector pixel from the field center
     # eventually should be factored out into some sort of repository for
     # for 'special numbers', rather than hardcoded here (and elsewhere)...
-    radius = 1.0923879
+
+    par = common.decam_params()
+
+    radius = par['max_pixel_radius_deg']
 
     radius += margin
 

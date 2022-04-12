@@ -3,6 +3,7 @@
 import argparse
 import requests
 import decam_reduce.util as util
+import decam_reduce.common as common
 import json
 import os
 import pandas as pd
@@ -103,7 +104,8 @@ def download_ps1_shards(ras, decs, nmp=8):
     # get shards list for each ra, dec then do downloads for the
     # unique set
 
-    margin = 0.1 # deg, not sure...
+    par = common.decam_params()
+    margin = par['shard_cone_margin_deg'] # deg, not sure...
     tables = []
     for i in range(len(ras)):
         shards = util.getShards_decam_pointing(ras[i], decs[i], depth=7,
