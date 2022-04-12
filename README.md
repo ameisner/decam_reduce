@@ -4,8 +4,7 @@
 
 Add the `decam_reduce/py` directory to your PYTHONPATH. Then you should be able to do stuff like the following:
 
-
-
+# full pipeline help
 
     python proc_1night.py --help
     usage: proc_1night.py [-h] [--repo_name REPO_NAME]
