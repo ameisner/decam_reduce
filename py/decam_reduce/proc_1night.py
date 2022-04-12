@@ -250,7 +250,7 @@ if __name__ == "__main__":
     parser.add_argument('--propid', default=None, type=str,
                         help="only process raw science data with this propid")
 
-    parser.add_argument('--do_ps1_download', default=False, type=bool,
+    parser.add_argument('--do_ps1_download', default=False, action='store_true',
                         help="download PS1 shard files from the internet?")
 
     args = parser.parse_args()
