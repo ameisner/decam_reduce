@@ -132,6 +132,22 @@ def download_raw_science(df):
     download_images(df, outdir)
 
 def download_calibs(df):
+    """
+    Download DECam master calibration images.
+
+    Parameters
+    ----------
+        df : pandas.core.frame.DataFrame
+            pandas DataFrame with one row per master calibration file to
+            download. Needs to include columns 'archive_filename' and 'url'.
+
+    Notes
+    -----
+        No outputs, but attempts to download files to disk.
+        Basically just a minimal wrapper for download_images function.
+
+    """
+
     print('DOWNLOADING NIGHTLY MASTER CALIBRATIONS')
 
     outdir = 'flats_biases' # make this not be hardcoded
