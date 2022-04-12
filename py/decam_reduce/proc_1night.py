@@ -110,6 +110,22 @@ def download_images(df, outdir):
         open(outname, 'wb').write(r.content)
 
 def download_raw_science(df):
+    """
+    Download raw science images.
+
+    Parameters
+    ----------
+        df : pandas.core.frame.DataFrame
+            pandas DataFrame with one row per raw science image file to
+            download. Needs to include columns 'archive_filename' and 'url'.
+
+    Notes
+    -----
+        No outputs, but attempts to download files to disk.
+        Basically just a minimal wrapper for download_images function.
+
+    """
+
     print('DOWNLOADING RAW SCIENCE FRAMES')
 
     outdir = 'raw' # make this not be hardcoded?
