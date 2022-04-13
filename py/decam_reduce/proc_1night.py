@@ -271,18 +271,6 @@ def download_ps1_shards(ras, decs, nmp=None):
         outname = os.path.join(outdir, _name)
         download_1shard(url, outname)
 
-# get list of files from /short API
-# get unique list of filters (maybe not strictly necessary)
-# download/ingest the calibs (flats) for those filters
-# download/ingest the bias for this night
-#     deal with fringe corr for z/Y
-# code to locate calibs from adjacent nights if needed
-# workaround for mastercal w/ wrong OBSTYPE?
-# figure out the list of HTM files
-#    download those from princeton server
-# create script for building butler repo and also the processCcd.py command
-# use DECaLS night = 2018-09-05 as a test case
-
 def write_staging_script(outname, do_ps1_download=False):
     """
     Create a staging script that prepares for reductions with the LSST pipeline.
