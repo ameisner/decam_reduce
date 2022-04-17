@@ -18,7 +18,6 @@ import pandas as pd
 from astropy.table import vstack
 import numpy as np
 import stat
-from multiprocessing import Pool
 
 def query_night(night):
     """
