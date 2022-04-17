@@ -48,6 +48,9 @@ def write_staging_script(outname, do_ps1_download=False):
     ref_cat_dir = 'ps1_pv3_3pi_20170110' if do_ps1_download \
         else par['ps1_fullsky_dir']
 
+    # this would happen if PS1_FULLSKY_DIR environment variable is not set
+    assert(ref_cat_dir is not None)
+
     cmds.append('ln -s ' + ref_cat_dir + ' DATA/ref_cats/ps1_pv3_3pi_20170110')
 
     _cmds = ''
