@@ -176,8 +176,8 @@ def query_night(night):
 
     """
 
-    url_short = 'https://astroarchive.noirlab.edu/api/short/ct4m/decam/' + \
-                night + '/'
+    par = common.decam_params()
+    url_short =  par['base_url_short'] + night + '/'
     nightsum = pd.DataFrame(requests.get(url_short).json()[1:])
 
     return nightsum
@@ -385,7 +385,7 @@ def download_ps1_shards(ras, decs, nmp=None):
     """
 
     par = common.decam_params()
-    margin = par['shard_cone_margin_deg'] # deg, not sure...
+    margin = par['shard_cone_margin_deg']
     tables = []
     for i in range(len(ras)):
         shards = getShards_decam_pointing(ras[i], decs[i], depth=7,
@@ -396,8 +396,7 @@ def download_ps1_shards(ras, decs, nmp=None):
 
     shards = np.unique(table['shard'])
 
-    # this should be extracted to common.py
-    base_url = 'http://tigress-web.princeton.edu/~pprice/ps1_pv3_3pi_20170110/'
+    base_url = par['base_url_pton']
 
     outdir = 'ps1_pv3_3pi_20170110'
     if not os.path.exists(outdir):
