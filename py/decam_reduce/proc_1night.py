@@ -11,10 +11,7 @@ Pipeline driver for preparing reductions of one observing night of DECam data.
 import argparse
 import decam_reduce.util as util
 import decam_reduce.common as common
-import json
-import os
 import numpy as np
-import stat
 
 def write_staging_script(outname, do_ps1_download=False):
     """
@@ -60,7 +57,7 @@ def write_staging_script(outname, do_ps1_download=False):
     with open(outname, 'wb') as f:
         f.write(_cmds.encode('ascii'))
 
-    add_exec_permission(outname)
+    util.add_exec_permission(outname)
 
 def write_launch_script(outname):
     """
@@ -84,26 +81,7 @@ def write_launch_script(outname):
     with open(outname, 'wb') as f:
         f.write(cmd.encode('ascii'))
 
-    add_exec_permission(outname)
-
-def add_exec_permission(fname):
-    """
-    Add executable permission to a file.
-
-    Parameters
-    ----------
-        fname : str
-            Name of the file for which to add executable permission.
-
-    Notes
-    -----
-        Should this be made to work with an input consisting of a list of
-        file names?
-
-    """
-
-    st = os.stat(fname)
-    os.chmod(fname, st.st_mode | stat.S_IXUSR)
+    util.add_exec_permission(outname)
 
 def _proc(caldat, limit=None, staging_script_name='stage.sh',
           launch_script_name='launch.sh', do_ps1_download=False):

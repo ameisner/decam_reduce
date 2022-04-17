@@ -14,6 +14,7 @@ import pandas as pd
 from astropy.table import vstack
 import os
 import numpy as np
+import stat
 
 def full_filter_name(filter):
     '''
@@ -409,3 +410,22 @@ def download_ps1_shards(ras, decs, nmp=None):
         print(url)
         outname = os.path.join(outdir, _name)
         download_1shard(url, outname)
+
+def add_exec_permission(fname):
+    """
+    Add executable permission to a file.
+
+    Parameters
+    ----------
+        fname : str
+            Name of the file for which to add executable permission.
+
+    Notes
+    -----
+        Should this be made to work with an input consisting of a list of
+        file names?
+
+    """
+
+    st = os.stat(fname)
+    os.chmod(fname, st.st_mode | stat.S_IXUSR)
