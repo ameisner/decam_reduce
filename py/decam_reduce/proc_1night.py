@@ -93,7 +93,7 @@ def write_launch_script(outname, nmp=None, repo_name='DATA'):
     if nmp is None:
         nmp = multiprocessing.cpu_count() // 2
 
-    cmd = 'processCcd.py ' + repo_name + ' --calib ' + repo_name + '/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(nmp)
+    cmd = 'processCcd.py ' + repo_name + ' --calib ' + repo_name + '/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(nmp) + '\n'
 
     with open(outname, 'wb') as f:
         f.write(cmd.encode('ascii'))
