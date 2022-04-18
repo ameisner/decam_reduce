@@ -182,7 +182,7 @@ def query_night(night):
 
     return nightsum
 
-def select_raw_science(nightsum, min_exptime_s=None):
+def select_raw_science(nightsum, min_exptime_s=None, _filter=None):
     """
     Select raw science frames.
 
@@ -195,6 +195,11 @@ def select_raw_science(nightsum, min_exptime_s=None):
         min_exptime_s : float
             Minimum exposure time in seconds to consider reducing. Default
             value is obtained from the set of parameters in common.py.
+        _filter : str, optional
+            Should be one of ['u', 'g', 'r', 'i', 'z', 'Y', 'VR']. Underscore 
+            in keyword argument name because filter is apparently a Python
+            built-in (?). Default is None, in which case no cuts will be
+            applied to the set of raw science images to reduce.
 
     Returns
     -------
@@ -219,6 +224,10 @@ def select_raw_science(nightsum, min_exptime_s=None):
            (nightsum['prod_type'] == 'image') & \
            (nightsum['obs_type'] == 'object') & \
            (nightsum['exposure'] >= 1)
+
+    if _filter is not None:
+        _full_filter_name = full_filter_name(_filter)
+        keep = np.logical_and(keep, nightsum['ifilter'] == _full_filter_name)
 
     # what to do for edge case in which nothing is retained?
     result = nightsum[keep]

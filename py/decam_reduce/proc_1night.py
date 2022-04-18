@@ -101,7 +101,8 @@ def write_launch_script(outname, nmp=None, repo_name='DATA'):
     util.add_exec_permission(outname)
 
 def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
-          launch_script_name='launch.sh', do_ps1_download=False, nmp=None):
+          launch_script_name='launch.sh', do_ps1_download=False, nmp=None,
+          _filter=None):
     """
     Prepare processing for a night of raw DECam data.
 
@@ -126,6 +127,11 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
         repo_name : str, optional
             Butler repository name. Default is DATA. Perhaps this special 
             default value should be extracted to common.py.
+        _filter : str, optional
+            Should be one of ['u', 'g', 'r', 'i', 'z', 'Y', 'VR']. Underscore 
+            in keyword argument name because filter is apparently a Python
+            built-in (?). Default is None, in which case no cuts will be
+            applied to the set of raw science images to reduce.
 
     Notes
     -----
@@ -136,8 +142,8 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
     print('WORKING ON NIGHT ' + caldat)
 
     nightsum = util.query_night('2018-09-05')
-    
-    raw = util.select_raw_science(nightsum)
+
+    raw = util.select_raw_science(nightsum, _filter=_filter)
 
     if limit is not None:
         raw = raw[0:limit]
@@ -183,6 +189,7 @@ if __name__ == "__main__":
     
     # I guess filter here should be an abbreviated name like 'u', 'g', 'r', ...
     # rather than the full filter name?
+    # ability to have a list of filters e.g., g and r only ?
     parser.add_argument('--filter', default=None, type=str,
                         help="only process raw science data with this filter")
 
@@ -198,4 +205,5 @@ if __name__ == "__main__":
     _proc(args.caldat[0], limit=args.limit, repo_name=args.repo_name,
           staging_script_name=args.staging_script_name,
           launch_script_name=args.launch_script_name,
-          do_ps1_download=args.do_ps1_download, nmp=args.multiproc)
+          do_ps1_download=args.do_ps1_download, nmp=args.multiproc,
+          _filter=args.filter)
