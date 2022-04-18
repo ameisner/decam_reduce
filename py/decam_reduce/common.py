@@ -33,7 +33,7 @@ def decam_params():
            'shard_cone_margin_deg': 0.1,
            'min_exptime_s': 1.0,
            'defect_basedir' : resource_filename('decam_reduce',
-                                  os.path.join('data', 'defects')),
+                                  os.path.join('data', 'decam', 'defects')),
            'ps1_fullsky_dir' : os.getenv('PS1_FULLSKY_DIR'),
            'base_url_short' : base_url_short,
            'base_url_pton' : base_url_pton}

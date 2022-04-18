@@ -55,6 +55,7 @@ def write_staging_script(outname, do_ps1_download=False, repo_name='DATA'):
     # this would happen if PS1_FULLSKY_DIR environment variable is not set
     assert(ref_cat_dir is not None)
 
+    cmds.append('mkdir ' + repo_name + '/ref_cats')
     cmds.append('ln -s ' + ref_cat_dir + ' ' + repo_name + \
         '/ref_cats/ps1_pv3_3pi_20170110')
 
@@ -171,6 +172,8 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
                                  np.array(raw['dec_min']))
     else:
         print('ATTEMPTING TO USE PS1 REFERENCE CATALOGS ALREADY ON DISK')
+
+    print('DONE')
     
 if __name__ == "__main__":
     descr = 'prepare processing for a night of raw DECam data'
