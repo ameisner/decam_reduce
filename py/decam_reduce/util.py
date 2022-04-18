@@ -16,6 +16,12 @@ import os
 import numpy as np
 import stat
 
+def print_hostname():
+    try:
+        print('Running on host: ' + str(os.environ.get('HOSTNAME')))
+    except:
+        print('Could not retrieve hostname!')
+
 def full_filter_name(filter):
     '''
     Retrieve full DECam filter name used by Astro Data Archive.

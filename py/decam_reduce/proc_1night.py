@@ -144,6 +144,8 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
 
     """
 
+    util.print_hostname()
+
     print('WORKING ON NIGHT ' + caldat)
 
     nightsum = util.query_night(caldat)
