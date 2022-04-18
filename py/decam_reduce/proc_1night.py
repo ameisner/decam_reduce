@@ -145,6 +145,7 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
     """
 
     util.print_hostname()
+    util.print_process_id()
 
     print('WORKING ON NIGHT ' + caldat)
 

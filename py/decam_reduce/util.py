@@ -31,6 +31,18 @@ def print_hostname():
     except:
         print('Could not retrieve hostname!')
 
+def print_process_id():
+    """
+    Print procesc ID.
+
+    Notes
+    -----
+        For logging purposes...
+
+    """
+
+    print('PID = ' + str(os.getpid()))
+
 def full_filter_name(filter):
     '''
     Retrieve full DECam filter name used by Astro Data Archive.
