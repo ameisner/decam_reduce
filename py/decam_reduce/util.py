@@ -17,6 +17,15 @@ import numpy as np
 import stat
 
 def print_hostname():
+    """
+    Print name of host computer.
+
+    Notes
+    -----
+        Meant to be a minimal utility for logging purposes...
+
+    """
+
     try:
         print('Running on host: ' + str(os.environ.get('HOSTNAME')))
     except:
