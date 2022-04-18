@@ -146,7 +146,7 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
 
     print('WORKING ON NIGHT ' + caldat)
 
-    nightsum = util.query_night('2018-09-05') # fix this hardcoding...
+    nightsum = util.query_night(caldat)
 
     raw = util.select_raw_science(nightsum, _filter=_filter, propid=propid)
 
