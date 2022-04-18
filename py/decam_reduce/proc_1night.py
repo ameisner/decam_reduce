@@ -63,7 +63,7 @@ def write_staging_script(outname, do_ps1_download=False):
 
     util.add_exec_permission(outname)
 
-def write_launch_script(outname):
+def write_launch_script(outname, nmp=None):
     """
     Create a launch script for performing reduction with the LSST pipeline.
 
@@ -71,7 +71,10 @@ def write_launch_script(outname):
     ----------
         outname : str
             Name of the shell script to be written.
-
+        nmp : int, optional
+            Number of CPUs for processCcd.py to use for reductions. If not 
+            specified, then the number of CPUs will be chosen as half of the
+            total number of CPUs available on the machine.
     Notes
     -----
         Doesn't return anything, but does attempt to write a file.
@@ -80,9 +83,10 @@ def write_launch_script(outname):
 
     """
 
-    n_cpu = multiprocessing.cpu_count() // 2
+    if nmp is None:
+        nmp = multiprocessing.cpu_count() // 2
 
-    cmd = 'processCcd.py DATA --calib DATA/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(n_cpu)
+    cmd = 'processCcd.py DATA --calib DATA/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(nmp)
 
     with open(outname, 'wb') as f:
         f.write(cmd.encode('ascii'))
@@ -90,7 +94,7 @@ def write_launch_script(outname):
     util.add_exec_permission(outname)
 
 def _proc(caldat, limit=None, staging_script_name='stage.sh',
-          launch_script_name='launch.sh', do_ps1_download=False):
+          launch_script_name='launch.sh', do_ps1_download=False, nmp=None):
     """
     Prepare processing for a night of raw DECam data.
 
@@ -108,6 +112,10 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh',
         do_ps1_download : bool, optional
             Whether or not to download PS1 shards from the internet, or
             find them on local disk.
+        nmp : int, optional 
+            Number of CPUs for processCcd.py to use for reductions. If not 
+            specified, then the number of CPUs will be chosen as half of the
+            total number of CPUs available on the machine.
 
     Notes
     -----
@@ -131,7 +139,7 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh',
     util.download_calibs(calib)
 
     write_staging_script(staging_script_name, do_ps1_download=do_ps1_download)
-    write_launch_script(launch_script_name)
+    write_launch_script(launch_script_name, nmp=nmp)
 
     if do_ps1_download:
         util.download_ps1_shards(np.array(raw['ra_min']),
@@ -179,4 +187,4 @@ if __name__ == "__main__":
     _proc(args.caldat[0], limit=args.limit,
           staging_script_name=args.staging_script_name,
           launch_script_name=args.launch_script_name,
-          do_ps1_download=args.do_ps1_download)
+          do_ps1_download=args.do_ps1_download, nmp=args.multiproc)
