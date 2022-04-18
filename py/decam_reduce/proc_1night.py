@@ -76,6 +76,8 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
     ----------
         outname : str
             Name of the shell script to be written.
+        caldat : str
+            Observing night in format YYYY-MM-DD.
         nmp : int, optional
             Number of CPUs for processCcd.py to use for reductions. If not 
             specified, then the number of CPUs will be chosen as half of the
