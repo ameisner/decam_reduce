@@ -68,7 +68,7 @@ def write_staging_script(outname, do_ps1_download=False, repo_name='DATA'):
 
     util.add_exec_permission(outname)
 
-def write_launch_script(outname, nmp=None, repo_name='DATA'):
+def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
     """
     Create a launch script for performing reduction with the LSST pipeline.
 
@@ -94,7 +94,7 @@ def write_launch_script(outname, nmp=None, repo_name='DATA'):
     if nmp is None:
         nmp = multiprocessing.cpu_count() // 2
 
-    cmd = 'processCcd.py ' + repo_name + ' --calib ' + repo_name + '/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(nmp) + '\n'
+    cmd = 'processCcd.py ' + repo_name + ' --calib ' + repo_name + '/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(nmp) + ' &> processCcd_' + caldat + '.log &\n'
 
     with open(outname, 'wb') as f:
         f.write(cmd.encode('ascii'))
@@ -165,7 +165,8 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
 
     write_staging_script(staging_script_name, do_ps1_download=do_ps1_download,
                          repo_name=repo_name)
-    write_launch_script(launch_script_name, nmp=nmp, repo_name=repo_name)
+    write_launch_script(launch_script_name, caldat, nmp=nmp, 
+                        repo_name=repo_name)
 
     if do_ps1_download:
         util.download_ps1_shards(np.array(raw['ra_min']),
