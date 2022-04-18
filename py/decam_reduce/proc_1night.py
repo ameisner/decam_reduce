@@ -12,6 +12,7 @@ import argparse
 import decam_reduce.util as util
 import decam_reduce.common as common
 import numpy as np
+import multiprocessing
 
 def write_staging_script(outname, do_ps1_download=False):
     """
@@ -79,7 +80,9 @@ def write_launch_script(outname):
 
     """
 
-    cmd = 'processCcd.py DATA --calib DATA/CALIB --rerun processCcdOutputs --id --longlog -j 20'
+    n_cpu = multiprocessing.cpu_count() // 2
+
+    cmd = 'processCcd.py DATA --calib DATA/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(n_cpu)
 
     with open(outname, 'wb') as f:
         f.write(cmd.encode('ascii'))
