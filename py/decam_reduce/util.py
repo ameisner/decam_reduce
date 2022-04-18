@@ -182,7 +182,7 @@ def query_night(night):
 
     return nightsum
 
-def select_raw_science(nightsum, min_exptime_s=None, _filter=None):
+def select_raw_science(nightsum, min_exptime_s=None, _filter=None, propid=None):
     """
     Select raw science frames.
 
@@ -200,6 +200,11 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None):
             in keyword argument name because filter is apparently a Python
             built-in (?). Default is None, in which case no cuts will be
             applied to the set of raw science images to reduce.
+        propid : str, optional
+            Proposal ID as a string. DECaLS example is 2014B-0404. Still need
+            to investigate the set of possible/allowed proposal ID values so
+            that I can eventually add some checks. Default of None means no
+            filtering on proposal ID.
 
     Returns
     -------
@@ -228,6 +233,9 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None):
     if _filter is not None:
         _full_filter_name = full_filter_name(_filter)
         keep = np.logical_and(keep, nightsum['ifilter'] == _full_filter_name)
+
+    if propid is not None:
+        keep = np.logical_and(keep, nightsum['proposal'] == propid)
 
     # what to do for edge case in which nothing is retained?
     result = nightsum[keep]
