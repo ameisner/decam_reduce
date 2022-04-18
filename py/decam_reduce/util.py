@@ -271,7 +271,7 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None, propid=None):
 
     return result
 
-def select_mastercal(nightsum):
+def select_mastercal(nightsum, raw=None):
     """
     Select the master calibration records for an observing night.
 
@@ -279,6 +279,10 @@ def select_mastercal(nightsum):
     ----------
         nightsum : pandas.core.frame.DataFrame
             Observing night summary DataFrame from /short API query.
+        raw : pandas.core.frame.DataFrame, optional
+            Optional dataframe listing the raw science data to be processed.
+            If specified, will be used to limit the calibrations to only
+            those in the relevant band(s).
 
     Returns
     -------
@@ -294,6 +298,17 @@ def select_mastercal(nightsum):
             (nightsum['obs_type'] == 'zero'))
 
     result = nightsum[keep]
+
+    if raw is not None:
+        filters = np.unique(raw['ifilter'])
+
+    keep = np.ones(len(result), dtype=bool)
+    for i in range(len(result)):
+        if result['obs_type'].iloc[i] == 'dome flat':
+            if result['ifilter'].iloc[i] not in filters:
+                keep[i] = False
+
+    result = result[keep]
 
     return result
 

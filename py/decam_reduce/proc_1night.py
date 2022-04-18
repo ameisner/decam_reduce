@@ -156,7 +156,7 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
     if limit is not None:
         raw = raw[0:limit]
 
-    calib = util.select_mastercal(nightsum)
+    calib = util.select_mastercal(nightsum, raw=raw)
 
     util.download_raw_science(raw)
 
