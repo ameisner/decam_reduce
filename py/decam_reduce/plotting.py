@@ -34,7 +34,10 @@ def exp_sky_locations(nightsum, coordsys='equ'):
         For now, do this in simple-minded rectangular projection -- use
             better projection scheme in the future?
         Different color points for different filters?
+            Need to finish this for filters other than grz.
         Add overlays showing Galactic and/or ecliptic planes?
+        Options for saved image file format e.g., PNG versus EPS?
+        Option to either show or save file?
 
     """
 
@@ -56,7 +59,8 @@ def exp_sky_locations(nightsum, coordsys='equ'):
     for band in color_dict.keys():
         plt.scatter(lon[nightsum['ifilter'] == band],
                     lat[nightsum['ifilter'] == band],
-                    s=10, edgecolor='none', c=color_dict[band])
+                    s=10, edgecolor='none', c=color_dict[band],
+                    label=util.abbrev_filter_name(band))
 
     par = common.decam_params()
 
@@ -71,5 +75,7 @@ def exp_sky_locations(nightsum, coordsys='equ'):
     title = caldat
 
     plt.title(title)
+
+    plt.legend(loc='lower left')
 
     plt.show()
