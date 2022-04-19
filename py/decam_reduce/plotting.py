@@ -12,6 +12,10 @@ import decam_reduce.common as common
 import decam_reduce.util as util
 from astropy.coordinates import SkyCoord
 import astropy.units as u
+from pkg_resources import resource_filename
+import os
+import glob
+import astropy.io.fits as fits
 
 def exp_sky_locations(nightsum, coordsys='equ', save=False):
     """
@@ -104,3 +108,50 @@ def exp_sky_locations(nightsum, coordsys='equ', save=False):
     else:
         outname = 'exp_sky_locations_' + caldat + '-' + coordsys + '.png'
         plt.savefig(outname)
+
+def outputs_fp_map(fname_raw, rerun_dir):
+    """
+    Focal plane map of which CCDs were reduced successfully.
+    """
+
+    assert(os.path.exists(fname_raw))
+
+    ccds, ccdnums = util.get_raw_ccds_list(fname_raw)
+
+    assert(os.path.exists(rerun_dir))
+
+    expid = util.get_expid(fname_raw)
+
+    expid_str = str(expid).zfill(7)
+    dir = os.path.join(rerun_dir, expid_str, 'calexp')
+
+    flist = glob.glob(dir + '/calexp-' + expid_str + '_??.fits')
+
+    ccdnum_calexp = [int(f[-7:-5]) for f in flist]
+
+    # read in the fits file with the CCD boundaries
+    fname_corners = resource_filename('decam_reduce',
+        os.path.join('data', 'cornerCoords_SN-C1-reordered-TAN.fits'))
+
+    corners = fits.getdata(fname_corners)
+
+    # plot the edges ; red for missing, black otherwise
+
+    for _ccdnum in np.unique(corners['CCD']):
+        _corners = corners[corners['CCD'] == _ccdnum]
+        missing = (_ccdnum in ccdnums) and (_ccdnum not in ccdnum_calexp)
+        color = 'r' if missing else 'k'
+        ra_center = np.mean(_corners['RA'])
+        dec_center = np.mean(_corners['DEC'])
+        plt.plot(_corners['RA'], _corners['DEC'], c=color)
+        plt.text(ra_center, dec_center, str(_ccdnum), color=color)
+        plt.xlim((np.max(corners['RA']) + 0.05, np.min(corners['RA']) - 0.05))
+        plt.xticks([])
+        plt.yticks([])
+        plt.title('EXPNUM = ' + str(expid))
+
+    # annotate with CCD numbers ; red for missing, black otherwise
+
+    plt.show()
+ 
+    

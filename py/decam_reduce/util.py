@@ -17,6 +17,7 @@ import numpy as np
 import stat
 from astropy.coordinates import SkyCoord
 import astropy.units as u
+import astropy.io.fits as fits
 
 def print_hostname():
     """
@@ -584,3 +585,22 @@ def galactic_coords(ras, decs):
     bgal = np.array(skycoords.galactic.b, dtype=float)
 
     return lgal, bgal
+
+def get_raw_ccds_list(fname):
+    hdul = fits.open(fname)
+
+    ccds = []
+    ccdnums = []
+    for i in range(len(hdul)):
+        h = hdul[i].header
+        if 'EXTNAME' in h:
+            if h['EXTNAME'][0] in ['N', 'S']:
+                ccds.append(h['EXTNAME'])
+                ccdnums.append(h['CCDNUM'])
+
+    return ccds, ccdnums
+
+def get_expid(fname_raw):
+    hdul = fits.open(fname_raw)
+
+    return hdul[0].header['EXPNUM']
