@@ -13,7 +13,7 @@ import decam_reduce.util as util
 from astropy.coordinates import SkyCoord
 import astropy.units as u
 
-def exp_sky_locations(nightsum, coordsys='equ'):
+def exp_sky_locations(nightsum, coordsys='equ', save=False):
     """
     Make a full-sky plot of exposure locations.
 
@@ -27,6 +27,8 @@ def exp_sky_locations(nightsum, coordsys='equ'):
         coordsys : str, optional
             Should be either 'equ' for equatorial coordinates or 'gal'
             for Galactic coordinates.
+        save : bool, optional
+            If true, save to file instead of popping up the plot.
 
     Notes 
     -----
@@ -95,4 +97,8 @@ def exp_sky_locations(nightsum, coordsys='equ'):
 
     plt.legend(loc='lower left')
 
-    plt.show()
+    if not save:
+        plt.show()
+    else:
+        outname = 'exp_sky_locations_' + caldat + '-' + coordsys + '.png'
+        plt.savefig(outname)

@@ -17,4 +17,4 @@ else:
 
 assert(coordsys in ['equ', 'gal'])
 
-plotting.exp_sky_locations(science, coordsys=coordsys)
+plotting.exp_sky_locations(science, coordsys=coordsys, save=True)
