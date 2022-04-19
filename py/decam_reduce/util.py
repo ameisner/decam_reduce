@@ -487,3 +487,16 @@ def add_exec_permission(fname):
 
     st = os.stat(fname)
     os.chmod(fname, st.st_mode | stat.S_IXUSR)
+
+def trixel_number_to_depth(trixel):
+    # scalar versus vector input?
+
+    def log4(x):
+        # log base 4 of x...
+        return np.log(x) / np.log(4)
+
+    depth = int(np.floor(log4(trixel / 2.0) - 1))
+
+    is_valid = trixel < (4**(depth+1)*4)
+
+    return depth, is_valid
