@@ -489,10 +489,44 @@ def add_exec_permission(fname):
     os.chmod(fname, st.st_mode | stat.S_IXUSR)
 
 def trixel_number_to_depth(trixel):
-    # scalar versus vector input?
+    """
+    Infer the HTM depth from the trixel number.
+
+    Parameters
+    ----------
+        trixel : int
+            HTM trixel number.
+
+    Returns
+    -------
+        depth : int
+            HTM depth parameter.
+        is_valid : bool
+            Boolean indicating whether the integer supplied is in fact a
+            valid HTM trixel number.
+
+    Notes
+    -----
+        Currently only works for scalar input 'trixel' value.
+
+    """
 
     def log4(x):
-        # log base 4 of x...
+        """
+        Log base 4.
+
+        Parameters
+        ----------
+            x : float
+                Value for which to compute log base 4.
+
+        Returns
+        -------
+            y : float
+                Log base 4 of x.
+
+        """
+
         return np.log(x) / np.log(4)
 
     depth = int(np.floor(log4(trixel / 2.0) - 1))
