@@ -109,7 +109,7 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
 
 def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
           launch_script_name='launch.sh', do_ps1_download=False, nmp=None,
-          _filter=None, propid=None):
+          _filter=None, propid=None, bgal_min=None):
     """
     Prepare processing for a night of raw DECam data.
 
@@ -144,6 +144,11 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
             to investigate the set of possible/allowed proposal ID values so
             that I can eventually add some checks. Default of None means no
             filtering on proposal ID.
+        bgal_min : float, optional
+            Minimum (field center) absolute Galactic latitude in degrees.
+            The idea is to avoid running jobs near the Galactic plane/center
+            that use excessive amounts of memory. Default value of None means
+            no |b_gal| but will get enforced.
 
     Notes
     -----
@@ -158,7 +163,8 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
 
     nightsum = util.query_night(caldat)
 
-    raw = util.select_raw_science(nightsum, _filter=_filter, propid=propid)
+    raw = util.select_raw_science(nightsum, _filter=_filter, propid=propid,
+                                  bgal_min=bgal_min)
 
     if limit is not None:
         raw = raw[0:limit]
@@ -217,10 +223,13 @@ if __name__ == "__main__":
     parser.add_argument('--do_ps1_download', default=False, action='store_true',
                         help="download PS1 shard files from the internet?")
 
+    parser.add_argument('--bgal_min', default=None, type=float,
+                        help="minimum absolute Galactic latitude in degrees")
+
     args = parser.parse_args()
 
     _proc(args.caldat[0], limit=args.limit, repo_name=args.repo_name,
           staging_script_name=args.staging_script_name,
           launch_script_name=args.launch_script_name,
           do_ps1_download=args.do_ps1_download, nmp=args.multiproc,
-          _filter=args.filter, propid=args.propid)
+          _filter=args.filter, propid=args.propid, bgal_min=args.bgal_min)

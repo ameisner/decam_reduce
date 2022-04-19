@@ -15,6 +15,8 @@ from astropy.table import vstack
 import os
 import numpy as np
 import stat
+from astropy.coordinates import SkyCoord
+import astropy.units as u
 
 def print_hostname():
     """
@@ -207,9 +209,18 @@ def query_night(night):
     url_short =  par['base_url_short'] + night + '/'
     nightsum = pd.DataFrame(requests.get(url_short).json()[1:])
 
+    # augment with lgal, bgal columns
+    # this may not be the best / proper place to do this -- may need 
+    # clean-up eventually
+    lgal, bgal = galactic_coords(nightsum['ra_min'], nightsum['dec_min'])
+
+    nightsum['lgal'] = lgal
+    nightsum['bgal'] = bgal
+
     return nightsum
 
-def select_raw_science(nightsum, min_exptime_s=None, _filter=None, propid=None):
+def select_raw_science(nightsum, min_exptime_s=None, _filter=None, 
+                       propid=None, bgal_min=None):
     """
     Select raw science frames.
 
@@ -232,6 +243,11 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None, propid=None):
             to investigate the set of possible/allowed proposal ID values so
             that I can eventually add some checks. Default of None means no
             filtering on proposal ID.
+        bgal_min : float, optional
+            Minimum (field center) absolute Galactic latitude in degrees.
+            The idea is to avoid running jobs near the Galactic plane/center
+            that use excessive amounts of memory. Default value of None means
+            no |b_gal| but will get enforced.
 
     Returns
     -------
@@ -263,6 +279,10 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None, propid=None):
 
     if propid is not None:
         keep = np.logical_and(keep, nightsum['proposal'] == propid)
+
+    if bgal_min is not None:
+        # any checking of bgal_min (value only makes sense if >= 0 and < 90)
+        keep = np.logical_and(keep, np.abs(nightsum['bgal']) > bgal_min)
 
     # what to do for edge case in which nothing is retained?
     result = nightsum[keep]
@@ -534,3 +554,33 @@ def trixel_number_to_depth(trixel):
     is_valid = trixel < (4**(depth+1)*4)
 
     return depth, is_valid
+
+def galactic_coords(ras, decs):
+    """
+    Compute galactic coordinates for a list of equatorial coordinates.
+
+    Parameters
+    ----------
+        ras : numpy.ndarray
+            List of RA coordinates in decimal degrees. Must have same size as
+            decs input
+        decs : numpy.ndarray
+            List of Dec coordinates in decimal degrees. Must have same size as
+            ras input.
+
+    Returns
+    -------
+        lgal : numpy.ndarray
+            Galactic longitude values in decimal degrees.
+        bgal : numpy.ndarray
+            Galactic latitude values in decimal degrees.
+
+    """
+
+    skycoords = SkyCoord(ras*u.deg, decs*u.deg,
+                         frame='icrs')
+
+    lgal = np.array(skycoords.galactic.l, dtype=float)
+    bgal = np.array(skycoords.galactic.b, dtype=float)
+
+    return lgal, bgal
