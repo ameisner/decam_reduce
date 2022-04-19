@@ -83,8 +83,10 @@ def exp_sky_locations(nightsum, coordsys='equ', save=False):
                      linestyle=linestyle)
 
     pad = 2.5 # deg
+    lat_upper = par['northern_limit_deg'] if coordsys is 'equ' else 90
+
     plt.xlim((360 + pad, -1*pad))
-    plt.ylim((-90 - pad, par['northern_limit_deg'] + pad))
+    plt.ylim((-90 - pad, lat_upper + pad))
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
