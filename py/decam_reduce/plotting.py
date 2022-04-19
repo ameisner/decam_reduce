@@ -9,6 +9,7 @@ Plotting utilities, particularly for quality assurance purposes.
 import matplotlib.pyplot as plt
 import numpy as np # assuming this will get used ...
 import decam_reduce.common as common
+import decam_reduce.util as util
 
 def exp_sky_locations(nightsum, coordsys='equ'):
     """
@@ -48,7 +49,14 @@ def exp_sky_locations(nightsum, coordsys='equ'):
     xlabel += ' (degrees)'
     ylabel += ' (degrees)'
 
-    plt.scatter(lon, lat, s=10, edgecolor='none', c='k')
+    color_dict = {util.full_filter_name('g') : 'g',
+                  util.full_filter_name('r') : 'r',
+                  util.full_filter_name('z') : 'm'}
+
+    for band in color_dict.keys():
+        plt.scatter(lon[nightsum['ifilter'] == band],
+                    lat[nightsum['ifilter'] == band],
+                    s=10, edgecolor='none', c=color_dict[band])
 
     par = common.decam_params()
 
