@@ -36,6 +36,7 @@ def decam_params():
                                   os.path.join('data', 'decam', 'defects')),
            'ps1_fullsky_dir' : os.getenv('PS1_FULLSKY_DIR'),
            'base_url_short' : base_url_short,
-           'base_url_pton' : base_url_pton}
+           'base_url_pton' : base_url_pton,
+           'northern_limit_deg' : 40.0}
 
     return par
