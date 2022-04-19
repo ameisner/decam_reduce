@@ -167,3 +167,39 @@ def outputs_fp_map(fname_raw, rerun_dir, save=False):
         plt.savefig(outname, dpi=200, bbox_inches='tight')
  
     
+def zeropoint_trend(caldat, rerun_dir, _filter, save=False):
+    assert(os.path.exists(rerun_dir))
+
+    flist = glob.glob(rerun_dir + '/*/metadata/metadata*.yaml')
+
+    flist.sort()
+
+    zeropoints = []
+    expids = []
+
+    for f in flist:
+        _f = open(f, 'r')
+        lines = _f.readlines()
+        line = lines[2575]
+        line = line.replace('\n', '')
+        line = line.replace(' - ', '')
+        line = line.replace(' ', '')
+        zeropoints.append(float(line))
+        _f.close()
+
+        expid = int(os.path.basename(f)[9:16])
+        expids.append(expid)
+
+
+    expids = np.array(expids)
+    plt.scatter(expids - np.min(expids), zeropoints, s=10)
+    plt.plot(expids - np.min(expids), zeropoints)
+    plt.ylabel('MAGZERO')
+    plt.xlabel('EXPNUM - ' + str(np.min(expids)))
+    plt.title(caldat + ' ; filter = ' + _filter)
+
+    if not save:
+        plt.show()
+    else:
+        outname = 'MAGZERO_' + caldat + '_' + _filter + '.png'
+        plt.savefig(outname, dpi=200, bbox_inches='tight')
