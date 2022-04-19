@@ -96,6 +96,10 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
     if nmp is None:
         nmp = multiprocessing.cpu_count() // 2
 
+    # -j 1 is fine for processCcd.py even though I believe this is
+    # the same as just running the CCDs in serial...
+    assert((nmp >= 1) and (nmp <= multiprocessing.cpu_count()))
+
     cmd = 'processCcd.py ' + repo_name + ' --calib ' + repo_name + '/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(nmp) + ' &> processCcd_' + caldat + '.log &\n'
 
     with open(outname, 'wb') as f:
