@@ -143,14 +143,22 @@ def outputs_fp_map(fname_raw, rerun_dir):
         color = 'r' if missing else 'k'
         ra_center = np.mean(_corners['RA'])
         dec_center = np.mean(_corners['DEC'])
+        _corners = _corners[[0, 1, 2, 3, 0]]
         plt.plot(_corners['RA'], _corners['DEC'], c=color)
         plt.text(ra_center, dec_center, str(_ccdnum), color=color)
-        plt.xlim((np.max(corners['RA']) + 0.05, np.min(corners['RA']) - 0.05))
-        plt.xticks([])
-        plt.yticks([])
-        plt.title('EXPNUM = ' + str(expid))
 
-    # annotate with CCD numbers ; red for missing, black otherwise
+    plt.text(np.max(corners['RA']) - 0.2,
+             np.min(corners['DEC']) - 0.08, 
+             'black = reductions succeeded')
+
+    plt.text(np.max(corners['RA']) - 1.4,
+             np.min(corners['DEC']) - 0.08, 
+             'red = reductions missing', color='r')
+
+    plt.xlim((np.max(corners['RA']) + 0.05, np.min(corners['RA']) - 0.05))
+    plt.xticks([])
+    plt.yticks([])
+    plt.title('EXPNUM = ' + str(expid))
 
     plt.show()
  
