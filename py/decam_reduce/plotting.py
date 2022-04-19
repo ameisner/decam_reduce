@@ -7,9 +7,11 @@ Plotting utilities, particularly for quality assurance purposes.
 """
 
 import matplotlib.pyplot as plt
-import numpy as np # assuming this will get used ...
+import numpy as np
 import decam_reduce.common as common
 import decam_reduce.util as util
+from astropy.coordinates import SkyCoord
+import astropy.units as u
 
 def exp_sky_locations(nightsum, coordsys='equ'):
     """
@@ -64,8 +66,23 @@ def exp_sky_locations(nightsum, coordsys='equ'):
 
     par = common.decam_params()
 
-    plt.xlim((362.5, -2.5))
-    plt.ylim((-92.5, par['northern_limit_deg'] + 2.5))
+    # now plot the Galactic plane, if coordsys is 'equ'
+    if coordsys == 'equ':
+
+        for bgal in [-10, 0, 10]:
+            lgal_samp = np.arange(361)
+            bgal_samp = lgal_samp*0 + bgal
+
+            skycoords = SkyCoord(lgal_samp*u.deg, bgal_samp*u.deg,
+                                 frame='galactic')
+
+            linestyle = '-' if bgal == 0 else '--'
+            plt.plot(skycoords.icrs.ra, skycoords.icrs.dec, c='gray',
+                     linestyle=linestyle)
+
+    pad = 2.5 # deg
+    plt.xlim((360 + pad, -1*pad))
+    plt.ylim((-90 - pad, par['northern_limit_deg'] + pad))
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
