@@ -196,7 +196,7 @@ def zeropoint_trend(caldat, rerun_dir, _filter, save=False):
     plt.plot(expids - np.min(expids), zeropoints)
     plt.ylabel('MAGZERO')
     plt.xlabel('EXPNUM - ' + str(np.min(expids)))
-    plt.title(caldat + ' ; filter = ' + _filter)
+    plt.title(caldat + ' ; filter = ' + _filter + ' ; CCDNUM = 10') # HACK !
 
     if not save:
         plt.show()
