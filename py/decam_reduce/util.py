@@ -221,7 +221,7 @@ def query_night(night):
     return nightsum
 
 def select_raw_science(nightsum, min_exptime_s=None, _filter=None, 
-                       propid=None, bgal_min=None):
+                       propid=None, bgal_min=None, expnum=None):
     """
     Select raw science frames.
 
@@ -249,6 +249,10 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None,
             The idea is to avoid running jobs near the Galactic plane/center
             that use excessive amounts of memory. Default value of None means
             no |b_gal| but will get enforced.
+        expnum : int, optional
+            Specific single EXPNUM to restrict to. Defaul is None, in which
+            case no cut on EXPNUM gets made. The thought is that this optional
+            argument could be useful for testing/debugging purposes.
 
     Returns
     -------
@@ -284,6 +288,12 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None,
     if bgal_min is not None:
         # any checking of bgal_min (value only makes sense if >= 0 and < 90)
         keep = np.logical_and(keep, np.abs(nightsum['bgal']) > bgal_min)
+
+    if expnum is not None:
+        # clean this up...
+        expnums = np.array([int(os.path.basename(origname)[6:14]) for origname in nightsum['original_filename']])
+        keep = np.logical_and(keep, expnums == expnum)
+        assert(np.sum(keep) == 1)
 
     # what to do for edge case in which nothing is retained?
     result = nightsum[keep]
