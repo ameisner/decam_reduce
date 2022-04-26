@@ -109,7 +109,7 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
 
 def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
           launch_script_name='launch.sh', do_ps1_download=False, nmp=None,
-          _filter=None, propid=None, bgal_min=None):
+          _filter=None, propid=None, bgal_min=None, expnum=None):
     """
     Prepare processing for a night of raw DECam data.
 
@@ -149,6 +149,10 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
             The idea is to avoid running jobs near the Galactic plane/center
             that use excessive amounts of memory. Default value of None means
             no |b_gal| but will get enforced.
+        expnum : int, optional
+            Specific single EXPNUM to restrict to. Defaul is None, in which
+            case no cut on EXPNUM gets made. The thought is that this optional
+            argument could be useful for testing/debugging purposes.
 
     Notes
     -----
@@ -164,7 +168,7 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
     nightsum = util.query_night(caldat)
 
     raw = util.select_raw_science(nightsum, _filter=_filter, propid=propid,
-                                  bgal_min=bgal_min)
+                                  bgal_min=bgal_min, expnum=expnum)
 
     if limit is not None:
         raw = raw[0:limit]
@@ -226,10 +230,15 @@ if __name__ == "__main__":
     parser.add_argument('--bgal_min', default=None, type=float,
                         help="minimum absolute Galactic latitude in degrees")
 
+    # DECam apparently uses EXPNUM rather than EXPID
+    parser.add_argument('--expnum', default=None, type=int,
+                        help="restrict to a specific exposure number")
+
     args = parser.parse_args()
 
     _proc(args.caldat[0], limit=args.limit, repo_name=args.repo_name,
           staging_script_name=args.staging_script_name,
           launch_script_name=args.launch_script_name,
           do_ps1_download=args.do_ps1_download, nmp=args.multiproc,
-          _filter=args.filter, propid=args.propid, bgal_min=args.bgal_min)
+          _filter=args.filter, propid=args.propid, bgal_min=args.bgal_min,
+          expnum=args.expnum)
