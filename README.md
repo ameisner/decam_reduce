@@ -82,6 +82,8 @@ setuptools
       --propid PROPID       only process raw science data with this propid
       --do_ps1_download DO_PS1_DOWNLOAD
                             download PS1 shard files from the internet?
+      --bgal_min BGAL_MIN   minimum absolute Galactic latitude in degrees
+      --expnum EXPNUM       restrict to a specific exposure number
 
 # example launch script
 
