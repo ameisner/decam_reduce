@@ -16,6 +16,7 @@ from pkg_resources import resource_filename
 import os
 import glob
 import astropy.io.fits as fits
+from astropy.table import Table
 
 def exp_sky_locations(nightsum, coordsys='equ', save=False):
     """
@@ -167,7 +168,8 @@ def outputs_fp_map(fname_raw, rerun_dir, save=False):
         plt.savefig(outname, dpi=200, bbox_inches='tight')
  
     
-def zeropoint_trend(caldat, rerun_dir, _filter, save=False):
+def zeropoint_trend(caldat, rerun_dir, _filter, save=False,
+                    return_table=False):
     assert(os.path.exists(rerun_dir))
 
     flist = glob.glob(rerun_dir + '/*/metadata/metadata*.yaml')
@@ -203,3 +205,9 @@ def zeropoint_trend(caldat, rerun_dir, _filter, save=False):
     else:
         outname = 'MAGZERO_' + caldat + '_' + _filter + '.png'
         plt.savefig(outname, dpi=200, bbox_inches='tight')
+
+    if return_table:
+        t = Table()
+        t['expid'] = expids
+        t['zeropoints'] = zeropoints
+        return t
