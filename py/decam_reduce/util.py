@@ -620,6 +620,19 @@ def header_radec_to_decimal(h):
     """
     Convert DECam raw header format (RA, Dec) to decimal degrees.
 
+    Parameters
+    ----------
+        h : astropy.io.fits.header.Header
+            Primary extension header of raw DECam image file. Expected to
+            have 'RA', 'DEC' cards with values that are sexagesimal/string.
+
+    Returns
+    -------
+        ra_deg : float
+            RA of field center in decimal degrees.
+        dec_deg : float
+            Dec of field center in decimal degrees.
+
     """
 
     ra = Angle(h['RA'] + ' hours')
