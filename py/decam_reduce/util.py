@@ -18,6 +18,7 @@ import stat
 from astropy.coordinates import SkyCoord
 import astropy.units as u
 import astropy.io.fits as fits
+from astropy.coordinates import Angle
 
 def print_hostname():
     """
@@ -614,3 +615,17 @@ def get_expid(fname_raw):
     hdul = fits.open(fname_raw)
 
     return hdul[0].header['EXPNUM']
+
+def header_radec_to_decimal(h):
+    """
+    Convert DECam raw header format (RA, Dec) to decimal degrees.
+
+    """
+
+    ra = Angle(h['RA'] + ' hours')
+    dec = Angle(h['DEC'] + ' degrees')
+
+    ra_deg = ra.deg
+    dec_deg = dec.deg
+
+    return ra_deg, dec_deg
