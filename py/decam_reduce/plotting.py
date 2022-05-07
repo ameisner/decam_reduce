@@ -113,7 +113,28 @@ def exp_sky_locations(nightsum, coordsys='equ', save=False):
 def outputs_fp_map(fname_raw, rerun_dir, save=False, outname_extra='',
                    title_extra=''):
     """
-    Focal plane map of which CCDs were reduced successfully.
+    Focal plane map of which CCDs were/weren't reduced successfully.
+
+    Parameters
+    ----------
+        fname_raw : str
+            File name of raw DECam image.
+        rerun_dir : str
+            Base rerun directory within which to look for calexp outputs.
+        save : bool, optional
+            If set True, save the plot to a PNG file. Default is False, in
+            which case the plot is popped up rather than saved.
+        outname_extra : str, optional
+            Add-on to the output PNG filename that will appear immediately
+            before the .png extension. Empty by default.
+        title_extra : str, optional
+            Add-on to plot title. Empty by default.
+
+    Notes
+    -----
+        Might be interesting to add a boolean keyword argument that dictates
+        whether the CCD labels are CCDNUM or CCDNAME.
+
     """
 
     assert(os.path.exists(fname_raw))
