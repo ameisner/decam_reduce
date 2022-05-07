@@ -110,7 +110,8 @@ def exp_sky_locations(nightsum, coordsys='equ', save=False):
         outname = 'exp_sky_locations_' + caldat + '-' + coordsys + '.png'
         plt.savefig(outname)
 
-def outputs_fp_map(fname_raw, rerun_dir, save=False, outname_extra=''):
+def outputs_fp_map(fname_raw, rerun_dir, save=False, outname_extra='',
+                   title_extra=''):
     """
     Focal plane map of which CCDs were reduced successfully.
     """
@@ -159,7 +160,11 @@ def outputs_fp_map(fname_raw, rerun_dir, save=False, outname_extra=''):
     plt.xlim((np.max(corners['RA']) + 0.05, np.min(corners['RA']) - 0.05))
     plt.xticks([])
     plt.yticks([])
-    plt.title('EXPNUM = ' + str(expid))
+
+    title = 'EXPNUM = ' + str(expid)
+    if title_extra != '':
+        title += ' ; ' + title_extra
+    plt.title(title)
 
     if not save:
         plt.show()
