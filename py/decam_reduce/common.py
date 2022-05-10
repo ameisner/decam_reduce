@@ -37,6 +37,8 @@ def decam_params():
            'ps1_fullsky_dir' : os.getenv('PS1_FULLSKY_DIR'),
            'base_url_short' : base_url_short,
            'base_url_pton' : base_url_pton,
-           'northern_limit_deg' : 40.0}
+           'northern_limit_deg' : 40.0,
+           'nx_active' : 2048,
+           'ny_active' : 4096}
 
     return par

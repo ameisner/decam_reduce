@@ -238,3 +238,96 @@ def zeropoint_trend(caldat, rerun_dir, _filter, save=False,
         t['expid'] = expids
         t['zeropoints'] = zeropoints
         return t
+
+def ref_star_locations(visit, ccdnum, repo_path, icSrc=False):
+    """
+    Overplot locations of crossmatched reference stars on top of all detections
+
+    Parameters
+    ----------
+        visit : int
+            Exposure number.
+        ccdnum : int
+            CCDNUM CCD identifier.
+        repo_path : str
+            Top-level output directory for the relevant rerun output.
+        icSrc : bool
+            Set True to use src/ catalog output rather than icSrc/ catalog
+            output for the 'detection list'. Default value is False.
+
+    Notes
+    -----
+        Intended to show one CCD at a time...
+
+        Regarding src/ versus icSrc/, see:
+            https://pipelines.lsst.io/v/v19_0_0/modules/lsst.pipe.tasks/tasks/lsst.pipe.tasks.processCcd.ProcessCcdTask.html?highlight=icsrc#output-datasets
+
+        Probably this should all be done via Butler rather than constructing
+        various file/directory names.
+
+    """
+
+    assert(os.path.exists(repo_path))
+
+    expnum_str = str(visit).zfill(7)
+    ccdnum_str = str(ccdnum).zfill(2)
+
+    det_subdir = 'icSrc' if icSrc else 'src'
+    ref_subdir = 'srcMatch'
+
+    det_path = os.path.join(repo_path, expnum_str, det_subdir)
+    
+    print(det_path)
+    assert(os.path.exists(det_path))
+
+    fname_det = det_subdir + '-' + expnum_str + '_' + ccdnum_str + '.fits'
+
+    fname_det = os.path.join(det_path, fname_det)
+
+    print(fname_det)
+    assert(os.path.exists(fname_det))
+
+    det = fits.getdata(fname_det) # ex = 1
+
+    ref_path = os.path.join(repo_path, expnum_str, ref_subdir)
+
+    assert(os.path.exists(ref_path))
+
+    fname_ref = ref_subdir + '-' + expnum_str + '_' + ccdnum_str + '.fits'
+    fname_ref = os.path.join(ref_path, fname_ref)
+
+    assert(os.path.exists(fname_ref))
+    
+    ref = fits.getdata(fname_ref)
+
+    plt.scatter(det['BASE_SDSSCENTROID_X'],
+                det['BASE_SDSSCENTROID_Y'],
+                s=1, edgecolor='none', c='k')
+
+    intersect, ind_ref, ind_det = np.intersect1d(ref['SECOND'], det['ID'],
+        return_indices=True)
+
+    det_row_matched = det[ind_det]
+
+    print(ref.dtype)
+    plt.scatter(det_row_matched['BASE_SDSSCENTROID_X'],
+                det_row_matched['BASE_SDSSCENTROID_Y'],
+                s=10, marker='o', facecolor='none', edgecolor='red')
+
+    par = common.decam_params()
+
+    plt.xlim([0, par['nx_active']])
+    plt.ylim([0, par['ny_active']])
+
+    plt.axes().set_aspect('equal')
+    plt.show()
+
+    # construct path of the detection catalog
+    # check that detection catalog exists
+    # construct path of the srcMatch matched detection-reference catalog
+    # check that the srcMatch catalog exists
+
+    # read in the two catalogs
+
+    # plot the detection catalog as small black dots overplot the detection 
+    # overplot the detectionr-reference cross-matches as larger red squares
