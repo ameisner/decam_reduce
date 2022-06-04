@@ -13,6 +13,11 @@ import astropy.io.fits as fits
 import os
 
 def stage_mono_decals():
+    """
+    Set up for mono-DECaLS data set LSST pipeline processing.
+
+    """
+
     fname_in = resource_filename('decam_reduce',
                                   os.path.join('data',
                                  'decals_unique_nights.fits'))
