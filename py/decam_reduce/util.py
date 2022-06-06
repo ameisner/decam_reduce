@@ -336,7 +336,8 @@ def select_mastercal(nightsum, raw=None):
 
     keep = np.ones(len(result), dtype=bool)
     for i in range(len(result)):
-        if result['obs_type'].iloc[i] == 'dome flat':
+        if (result['obs_type'].iloc[i] == 'dome flat') or \
+           (result['exposure'].iloc[i] != 0):
             if result['ifilter'].iloc[i] not in filters:
                 keep[i] = False
 
