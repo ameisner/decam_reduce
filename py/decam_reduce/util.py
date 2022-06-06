@@ -379,6 +379,14 @@ def select_mastercal(nightsum, raw=None):
 
     result = result[keep]
 
+    # now remove duplicates by requiring unique EXPNUM
+    # apparently we don't directly have EXPNUM from the /short API
+    # but we can (hopefully) use original_filename in an equivalent way
+    _, unique_indices = np.unique(result['original_filename'],
+                                  return_index=True)
+
+    result = result.iloc[unique_indices]
+
     result = downselect_zeros(result)
 
     return result
