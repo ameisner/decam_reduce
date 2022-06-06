@@ -303,6 +303,36 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None,
 
     return result
 
+def downselect_zeros(tab):
+    """
+    Choose best master calibration zero among many options for a single night.
+
+    Notes
+    -----
+        Assume input table 'tab' includes only valid mastercal images.
+
+    """
+
+    n_zeros = np.sum(tab['exposure'] == 0)
+
+    # don't do anything in this case
+    if n_zeros < 2:
+        return tab
+    else:
+        keep = np.ones(len(tab), dtype=bool)
+        for i in range(len(tab)):
+            if tab['exposure'].iloc[i] != 0:
+                continue
+            if tab['ifilter'].iloc[i].strip() != 'solid plate 0.0 0.0':
+                keep[i] = False
+            if (n_zeros-np.sum(np.logical_not(keep))) == 1:
+                break
+
+    tab = tab[keep]
+
+    print('TRIMMED OUT ', np.sum(np.logical_not(keep)), ' EXTRA ZEROS')
+    return tab
+
 def select_mastercal(nightsum, raw=None):
     """
     Select the master calibration records for an observing night.
@@ -340,8 +370,16 @@ def select_mastercal(nightsum, raw=None):
            (result['exposure'].iloc[i] != 0):
             if result['ifilter'].iloc[i] not in filters:
                 keep[i] = False
+        # for now, throw out dome flats marked as zeros
+        # but eventually will want to try to salvage these
+        # and use them as the dome flats that they are
+        if (result['obs_type'].iloc[i] == 'zero') and \
+           (result['exposure'].iloc[i] != 0):
+                keep[i] = False
 
     result = result[keep]
+
+    result = downselect_zeros(result)
 
     return result
 
