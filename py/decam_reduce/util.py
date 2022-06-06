@@ -333,6 +333,30 @@ def downselect_zeros(tab):
     print('TRIMMED OUT ', np.sum(np.logical_not(keep)), ' EXTRA ZEROS')
     return tab
 
+def _remove_morning_master(tab):
+    """
+    Remove morning master calibrations, which appear to cause problems.
+
+    Notes
+    -----
+        This is basically a hack; should eventually figure out a better
+        solution for this situation.
+
+    """
+
+    _char = np.zeros(len(tab), dtype='U1')
+    for i in range(len(tab)):
+        # dateobs_min, dateobs_max are the same usually?
+        date = tab['dateobs_min'].iloc[i]
+        pos = date.find('T') + 1
+        _char[i] = date[pos]
+
+    _char = np.array(_char)
+
+    keep = (_char != '0')
+
+    return tab[keep]
+
 def select_mastercal(nightsum, raw=None):
     """
     Select the master calibration records for an observing night.
@@ -386,6 +410,8 @@ def select_mastercal(nightsum, raw=None):
                                   return_index=True)
 
     result = result.iloc[unique_indices]
+
+    result = _remove_morning_master(result)
 
     result = downselect_zeros(result)
 
