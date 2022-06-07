@@ -717,9 +717,15 @@ def get_expid(fname_raw):
     Returns
     -------
          : int
-        Exposure number from the EXPNUM header card
+        Exposure number from the EXPNUM header card.
+
+    Notes
+    -----
+        Is it safe to just go based on the raw file name, assuming that
+        always has the form DECam_????????.fits.fz ?
 
     """
+
     hdul = fits.open(fname_raw)
 
     return hdul[0].header['EXPNUM']
