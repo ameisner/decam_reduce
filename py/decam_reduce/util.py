@@ -438,7 +438,7 @@ def select_mastercal(nightsum, raw=None):
 
     return result
 
-def download_images(df, outdir):
+def download_images(df, outdir, return_outnames=False):
     """
     Download a list of images based on their URL's.
 
@@ -462,6 +462,7 @@ def download_images(df, outdir):
     if not os.path.exists(outdir):
         os.mkdir(outdir)
 
+    outnames = []
     for i in range(len(df)):
         print(i+1, ' of ', len(df))
         url = df['url'].iloc[i]
@@ -475,6 +476,10 @@ def download_images(df, outdir):
 
         r = requests.get(url, allow_redirects=True)
         open(outname, 'wb').write(r.content)
+        outnames.append(outname)
+
+    if return_outnames:
+        return outnames
 
 def download_raw_science(df):
     """
@@ -518,7 +523,10 @@ def download_calibs(df):
     print('DOWNLOADING NIGHTLY MASTER CALIBRATIONS')
 
     outdir = 'flats_biases' # make this not be hardcoded
-    download_images(df, outdir)
+    fnames = download_images(df, outdir, return_outnames=True)
+
+    for fname in fnames:
+        dummy_mastercal_hdu(fname)
 
 def download_1shard(url, outname):
     """
@@ -773,3 +781,18 @@ def header_radec_to_decimal(h):
     dec_deg = dec.deg
 
     return ra_deg, dec_deg
+
+def dummy_mastercal_hdu(fname):
+    hdul = fits.open(fname)
+    if len(hdul) == 62:
+        print('REPAIRING MISSING MASTERCAL EXTENSION : ', fname)
+        hdul = fits.open(fname)
+
+        _hdul = hdul[0:61]
+
+        _hdul.append(_hdul[60])
+        _hdul.append(hdul[61])
+
+        outname_tmp = fname + '.tmp'
+        _hdul.writeto(outname_tmp)
+        os.rename(outname_tmp, fname) # overwrite
