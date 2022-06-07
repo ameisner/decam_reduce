@@ -337,6 +337,16 @@ def _remove_morning_master(tab):
     """
     Remove morning master calibrations, which appear to cause problems.
 
+    Parameters
+    ----------
+        tab : pandas.core.frame.DataFrame
+            pandas DataFrame with one row per mastercal product.
+
+    Returns
+    -------
+        tab : pandas.core.frame.DataFrame
+            Possibly modified version of input pandas DataFrame.
+
     Notes
     -----
         This is basically a hack; should eventually figure out a better
