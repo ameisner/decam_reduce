@@ -706,6 +706,20 @@ def get_raw_ccds_list(fname):
     return ccds, ccdnums
 
 def get_expid(fname_raw):
+    """
+    Retrieve a raw DECam file's exposure number from its header.
+
+    Parameters
+    ----------
+        fname_raw : str
+            Full file name of a raw DECam exposure.
+
+    Returns
+    -------
+         : int
+        Exposure number from the EXPNUM header card
+
+    """
     hdul = fits.open(fname_raw)
 
     return hdul[0].header['EXPNUM']
