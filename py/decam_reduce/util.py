@@ -307,9 +307,20 @@ def downselect_zeros(tab):
     """
     Choose best master calibration zero among many options for a single night.
 
+    Parameters
+    ----------
+        tab : pandas.core.frame.DataFrame
+            pandas DataFrame with one row per mastercal zero product.
+
+    Returns
+    -------
+        tab : pandas.core.frame.DataFrame
+            Possibly modified version of input pandas DataFrame.
+
     Notes
     -----
         Assume input table 'tab' includes only valid mastercal images.
+        Can this function be deleted?
 
     """
 
