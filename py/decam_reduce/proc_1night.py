@@ -109,7 +109,8 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
 
 def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
           launch_script_name='launch.sh', do_ps1_download=False, nmp=None,
-          _filter=None, propid=None, bgal_min=None, expnum=None):
+          _filter=None, propid=None, bgal_min=None, expnum=None,
+          skip_raw_download=False):
     """
     Prepare processing for a night of raw DECam data.
 
@@ -153,6 +154,11 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
             Specific single EXPNUM to restrict to. Defaul is None, in which
             case no cut on EXPNUM gets made. The thought is that this optional
             argument could be useful for testing/debugging purposes.
+        skip_raw_download : bool, optional
+            If set True, skip actually downloading the raw DECam image files.
+            Meant to be used for debugging, to speed things up when perhaps
+            only the downloaded master calibration files are of interest, but
+            not the raw science images themselves.
 
     Notes
     -----
@@ -175,7 +181,8 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
 
     calib = util.select_mastercal(nightsum, raw=raw)
 
-    util.download_raw_science(raw)
+    if not skip_raw_download:
+        util.download_raw_science(raw)
 
     util.download_calibs(calib)
 
@@ -234,6 +241,10 @@ if __name__ == "__main__":
     parser.add_argument('--expnum', default=None, type=int,
                         help="restrict to a specific exposure number")
 
+    parser.add_argument('--skip_raw_download', default=False,
+                        action='store_true',
+                        help="skip downloading raw files; meant for debugging")
+
     args = parser.parse_args()
 
     _proc(args.caldat[0], limit=args.limit, repo_name=args.repo_name,
@@ -241,4 +252,4 @@ if __name__ == "__main__":
           launch_script_name=args.launch_script_name,
           do_ps1_download=args.do_ps1_download, nmp=args.multiproc,
           _filter=args.filter, propid=args.propid, bgal_min=args.bgal_min,
-          expnum=args.expnum)
+          expnum=args.expnum, skip_raw_download=args.skip_raw_download)
