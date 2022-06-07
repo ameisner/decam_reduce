@@ -36,8 +36,8 @@ def write_staging_script(outname, do_ps1_download=False, repo_name='DATA'):
 
     cmds = []
 
-    cmds.append('mkdir ' + repo_name)
-    cmds.append('mkdir ' + repo_name + '/CALIB')
+    cmds.append('mkdir -p ' + repo_name)
+    cmds.append('mkdir -p ' + repo_name + '/CALIB')
 
     cmds.append('echo lsst.obs.decam.DecamMapper > ' + repo_name + '/_mapper')
 
@@ -55,7 +55,7 @@ def write_staging_script(outname, do_ps1_download=False, repo_name='DATA'):
     # this would happen if PS1_FULLSKY_DIR environment variable is not set
     assert(ref_cat_dir is not None)
 
-    cmds.append('mkdir ' + repo_name + '/ref_cats')
+    cmds.append('mkdir -p ' + repo_name + '/ref_cats')
     cmds.append('ln -s ' + ref_cat_dir + ' ' + repo_name + \
         '/ref_cats/ps1_pv3_3pi_20170110')
 
