@@ -692,6 +692,23 @@ def galactic_coords(ras, decs):
     return lgal, bgal
 
 def get_raw_ccds_list(fname):
+    """
+    Get list of CCD names/numbers present in a raw DECam image file.
+
+    Parameters
+    ----------
+        fname : str
+            Full file name of a raw DECam exposure.
+
+    Returns
+    -------
+        ccds : list
+            List of string CCD names (e.g., 'N10')
+        ccdnums : list
+            Corresponding list of integer CCD numbers (e.g., 41)
+
+    """
+
     hdul = fits.open(fname)
 
     ccds = []
