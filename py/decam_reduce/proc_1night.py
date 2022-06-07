@@ -68,7 +68,8 @@ def write_staging_script(outname, do_ps1_download=False, repo_name='DATA'):
 
     util.add_exec_permission(outname)
 
-def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
+def write_launch_script(outname, caldat, nmp=None, repo_name='DATA',
+                        skip_fringe=False):
     """
     Create a launch script for performing reduction with the LSST pipeline.
 
@@ -85,6 +86,10 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
         repo_name : str, optional
             Butler repository name. Default is DATA. Perhaps this special 
             default value should be extracted to common.py.
+        skip_fringe : bool, optional
+            If set True, skip fringe correction step during detrending. Default
+            value is False.
+
     Notes
     -----
         Doesn't return anything, but does attempt to write a file.
@@ -100,7 +105,9 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
     # the same as just running the CCDs in serial...
     assert((nmp >= 1) and (nmp <= multiprocessing.cpu_count()))
 
-    cmd = 'processCcd.py ' + repo_name + ' --calib ' + repo_name + '/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(nmp) + ' &> processCcd_' + caldat + '.log &\n'
+    do_fringe_str = ' --config isr.doFringe=False' if skip_fringe else ''
+
+    cmd = 'processCcd.py ' + repo_name + ' --calib ' + repo_name + '/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(nmp) + do_fringe_str + ' &> processCcd_' + caldat + '.log &\n'
 
     with open(outname, 'wb') as f:
         f.write(cmd.encode('ascii'))
@@ -110,7 +117,7 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA'):
 def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
           launch_script_name='launch.sh', do_ps1_download=False, nmp=None,
           _filter=None, propid=None, bgal_min=None, expnum=None,
-          skip_raw_download=False):
+          skip_raw_download=False, skip_fringe=False):
     """
     Prepare processing for a night of raw DECam data.
 
@@ -159,6 +166,9 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
             Meant to be used for debugging, to speed things up when perhaps
             only the downloaded master calibration files are of interest, but
             not the raw science images themselves.
+        skip_fringe : bool, optional
+            If set True, skip fringe correction step during detrending. Default
+            value is False.
 
     Notes
     -----
@@ -189,7 +199,7 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
     write_staging_script(staging_script_name, do_ps1_download=do_ps1_download,
                          repo_name=repo_name)
     write_launch_script(launch_script_name, caldat, nmp=nmp, 
-                        repo_name=repo_name)
+                        repo_name=repo_name, skip_fringe=skip_fringe)
 
     if do_ps1_download:
         util.download_ps1_shards(np.array(raw['ra_min']),
@@ -245,6 +255,9 @@ if __name__ == "__main__":
                         action='store_true',
                         help="skip downloading raw files; meant for debugging")
 
+    parser.add_argument('--skip_fringe', default=False, action='store_true',
+                        help="skip fringe correction")
+
     args = parser.parse_args()
 
     _proc(args.caldat[0], limit=args.limit, repo_name=args.repo_name,
@@ -252,4 +265,5 @@ if __name__ == "__main__":
           launch_script_name=args.launch_script_name,
           do_ps1_download=args.do_ps1_download, nmp=args.multiproc,
           _filter=args.filter, propid=args.propid, bgal_min=args.bgal_min,
-          expnum=args.expnum, skip_raw_download=args.skip_raw_download)
+          expnum=args.expnum, skip_raw_download=args.skip_raw_download,
+          skip_fringe=args.skip_fringe)
