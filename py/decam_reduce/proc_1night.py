@@ -69,7 +69,7 @@ def write_staging_script(outname, do_ps1_download=False, repo_name='DATA'):
     util.add_exec_permission(outname)
 
 def write_launch_script(outname, caldat, nmp=None, repo_name='DATA',
-                        skip_fringe=False):
+                        skip_fringe=False, maxRefObjects=None):
     """
     Create a launch script for performing reduction with the LSST pipeline.
 
@@ -89,6 +89,11 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA',
         skip_fringe : bool, optional
             If set True, skip fringe correction step during detrending. Default
             value is False.
+        maxRefObjects : int, optional
+            Maximum number of astrometric reference objects to retain. Gets
+            propagated into calibrate.astrometry.matcher.maxRefObjects config
+            parameter in the launch script. LSST pipeline default is 65536,
+            and maxRefObjects should not be set to a value larger than that.
 
     Notes
     -----
@@ -107,7 +112,18 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA',
 
     do_fringe_str = ' --config isr.doFringe=False' if skip_fringe else ''
 
-    cmd = 'processCcd.py ' + repo_name + ' --calib ' + repo_name + '/CALIB --rerun processCcdOutputs --id --longlog -j ' + str(nmp) + do_fringe_str + ' &> processCcd_' + caldat + '.log &\n'
+    maxRefObjects_str = ''
+    if maxRefObjects is not None:
+        # extract this 65536 special number eventually
+        if (maxRefObjects > 65536) or (maxRefObjects < 1):
+            print('INVALID maxRefObjects INPUT')
+        else:
+            maxRefObjects_str = ' --config calibrate.astrometry.matcher.maxRefObjects=' + str(maxRefObjects)
+
+    cmd = 'processCcd.py ' + repo_name + ' --calib ' + repo_name + \
+          '/CALIB --rerun processCcdOutputs --id --longlog -j ' + \
+          str(nmp) + do_fringe_str + maxRefObjects_str + ' &> processCcd_' + \
+          caldat + '.log &\n'
 
     with open(outname, 'wb') as f:
         f.write(cmd.encode('ascii'))
@@ -117,7 +133,8 @@ def write_launch_script(outname, caldat, nmp=None, repo_name='DATA',
 def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
           launch_script_name='launch.sh', do_ps1_download=False, nmp=None,
           _filter=None, propid=None, bgal_min=None, expnum=None,
-          skip_raw_download=False, skip_fringe=False):
+          skip_raw_download=False, skip_fringe=False,
+          maxRefObjects=None):
     """
     Prepare processing for a night of raw DECam data.
 
@@ -169,6 +186,11 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
         skip_fringe : bool, optional
             If set True, skip fringe correction step during detrending. Default
             value is False.
+        maxRefObjects : int, optional
+            Maximum number of astrometric reference objects to retain. Gets
+            propagated into calibrate.astrometry.matcher.maxRefObjects config
+            parameter in the launch script. LSST pipeline default is 65536,
+            and maxRefObjects should not be set to a value larger than that.
 
     Notes
     -----
@@ -199,7 +221,8 @@ def _proc(caldat, limit=None, staging_script_name='stage.sh', repo_name='DATA',
     write_staging_script(staging_script_name, do_ps1_download=do_ps1_download,
                          repo_name=repo_name)
     write_launch_script(launch_script_name, caldat, nmp=nmp, 
-                        repo_name=repo_name, skip_fringe=skip_fringe)
+                        repo_name=repo_name, skip_fringe=skip_fringe,
+                        maxRefObjects=maxRefObjects)
 
     if do_ps1_download:
         util.download_ps1_shards(np.array(raw['ra_min']),
@@ -258,6 +281,9 @@ if __name__ == "__main__":
     parser.add_argument('--skip_fringe', default=False, action='store_true',
                         help="skip fringe correction")
 
+    parser.add_argument('--maxRefObjects', default=None, type=int,
+                        help="maximum number of astrometric reference objects")
+
     args = parser.parse_args()
 
     _proc(args.caldat[0], limit=args.limit, repo_name=args.repo_name,
@@ -266,4 +292,4 @@ if __name__ == "__main__":
           do_ps1_download=args.do_ps1_download, nmp=args.multiproc,
           _filter=args.filter, propid=args.propid, bgal_min=args.bgal_min,
           expnum=args.expnum, skip_raw_download=args.skip_raw_download,
-          skip_fringe=args.skip_fringe)
+          skip_fringe=args.skip_fringe, maxRefObjects=args.maxRefObjects)

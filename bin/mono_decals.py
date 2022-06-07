@@ -16,6 +16,11 @@ def stage_mono_decals():
     """
     Set up for mono-DECaLS data set LSST pipeline processing.
 
+    Notes
+    -----
+        Should also have this create something like a 'stage_all.sh'
+        meta-staging script.
+
     """
 
     fname_in = resource_filename('decam_reduce',
@@ -34,7 +39,8 @@ def stage_mono_decals():
         _proc(caldat, limit=None, staging_script_name=staging_script_name, 
               repo_name='DATA', launch_script_name=launch_script_name, 
               do_ps1_download=False, nmp=None, _filter=None, propid=None, 
-              bgal_min=None, expnum=expnum)
+              bgal_min=None, expnum=expnum, skip_fringe=True,
+              maxRefObjects=3000)
 
 if __name__=="__main__":
     stage_mono_decals()
