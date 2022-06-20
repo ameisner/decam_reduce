@@ -84,7 +84,10 @@ setuptools
                             download PS1 shard files from the internet?
       --bgal_min BGAL_MIN   minimum absolute Galactic latitude in degrees
       --expnum EXPNUM       restrict to a specific exposure number
-
+      --skip_raw_download   skip downloading raw files; meant for debugging
+      --skip_fringe         skip fringe correction
+      --maxRefObjects MAXREFOBJECTS
+                            maximum number of astrometric reference objects
 # example launch script
 
 An example launch script is available as `bin/2018-09-05.sh`.
