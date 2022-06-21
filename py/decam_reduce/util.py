@@ -874,6 +874,9 @@ def ccdname_to_ccdnum(ccdname):
 
     """
 
+    if ccdname == 'N30':
+        return 61
+
     mapper = get_decam_mapper()
 
     _mapping = mapper.detectorNames
@@ -908,6 +911,9 @@ def ccdnum_to_ccdname(ccdnum):
         Not currently vectorized.
 
     """
+
+    if ccdnum == 61:
+        return 'N30'
 
     mapper = get_decam_mapper()
 
