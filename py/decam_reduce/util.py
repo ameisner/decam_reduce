@@ -832,6 +832,14 @@ def dummy_mastercal_hdu(fname):
 @lru_cache(maxsize=1)
 def get_decam_mapper():
     """
+    Retrieve DECamMapper object, with caching.
+
+    Notes
+    -----
+        mapper = DecamMapper() is apparently slow (0.5-1 seconds),
+        which I assume is due to some I/O that happens behind the scenes,
+        hence the caching.
+
     """
 
     from lsst.obs.decam import DecamMapper
