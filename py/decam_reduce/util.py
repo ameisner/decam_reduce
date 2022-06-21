@@ -784,6 +784,21 @@ def header_radec_to_decimal(h):
     return ra_deg, dec_deg
 
 def dummy_mastercal_hdu(fname):
+    """
+    Add dummy extensions to keep CCDNUM and extension number in alignment.
+
+    Parameters
+    ----------
+        fname : str
+            Full file name of master calibration file.
+
+    Notes
+    -----
+        File gets overwritten if nonzero number of dummy extensions are needed.
+        Needs major rewrite/cleanup.
+
+    """
+
     hdul = fits.open(fname)
 
     if len(hdul) == 61:
