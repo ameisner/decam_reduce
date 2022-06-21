@@ -839,6 +839,10 @@ def get_decam_mapper():
         mapper = DecamMapper() is apparently slow (0.5-1 seconds),
         which I assume is due to some I/O that happens behind the scenes,
         hence the caching.
+        Does DECamMapper include non-science (guide, focus) detector mapping?
+
+        N30 is entirely absent??? Probably will need a workaround for this...
+        N30 <-> CCDNUM = 61
 
     """
 
@@ -849,6 +853,42 @@ def get_decam_mapper():
     return mapper
 
 
+def ccdname_to_ccdnum(ccdname):
+    """
+    Convert from DECam CCDNAME to CCDNUM.
+
+    Parameters
+    ----------
+        ccdname : str
+            CCDNAME like 'S30'. Needs to be a valid DECam CCDNAME,
+            excluding N30.
+
+    Returns
+    -------
+        ccdnum : int
+            CCDNUM, should be an integer in the range [1, 62], excluding 61.
+
+    Notes
+    -----
+        Not currently vectorized.
+
+    """
+
+    mapper = get_decam_mapper()
+
+    _mapping = mapper.detectorNames
+
+    # swap keys/values
+    mapping = dict((v,k) for k,v in _mapping.items())
+
+    if ccdname not in mapping.keys():
+        print('INVALID CCDNAME VALUE : ', ccdname)
+        assert(False)
+
+    ccdnum = mapping[ccdname]
+
+    return ccdnum
+
 def ccdnum_to_ccdname(ccdnum):
     """
     Convert from DECam CCDNUM to CCDNAME.
@@ -856,7 +896,7 @@ def ccdnum_to_ccdname(ccdnum):
     Parameters
     ----------
         ccdnum : int
-            CCDNUM, should be an integer in the range [1, 62].
+            CCDNUM, should be an integer in the range [1, 62], excluding 61.
 
     Returns
     -------
