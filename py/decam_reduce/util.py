@@ -925,3 +925,23 @@ def ccdnum_to_ccdname(ccdnum):
     ccdname = mapping[ccdnum]
 
     return ccdname
+
+def all_ccdnum_list(omit_bad=False):
+    """
+    Return a list of valid DECam CCDNUM values.
+
+    Parameters
+    ----------
+        omit_bad : bool, optional
+            If True, omit the two CCDs that are generally/always bad
+            (CCDNUM = 2, 61).
+
+    """
+
+    ccdnums = list(np.arange(1, 63))
+
+    if omit_bad:
+        del ccdnums[60]
+        del ccdnums[1]
+
+    return ccdnums
