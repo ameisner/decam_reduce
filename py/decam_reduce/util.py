@@ -851,6 +851,21 @@ def get_decam_mapper():
 
 def ccdnum_to_ccdname(ccdnum):
     """
+    Convert from DECam CCDNUM to CCDNAME.
+
+    Parameters
+    ----------
+        ccdnum : int
+            CCDNUM, should be an integer in the range [1, 62].
+
+    Returns
+    -------
+        ccdname : str
+            CCDNAME like 'S30'.
+
+    Notes
+    -----
+        Not currently vectorized.
 
     """
 
