@@ -20,6 +20,7 @@ import astropy.units as u
 import astropy.io.fits as fits
 from astropy.coordinates import Angle
 import copy
+from functools import lru_cache
 
 def print_hostname():
     """
@@ -828,6 +829,7 @@ def dummy_mastercal_hdu(fname):
         _hdul.writeto(outname_tmp)
         os.rename(outname_tmp, fname) # overwrite
 
+@lru_cache(maxsize=1)
 def get_decam_mapper():
     """
     """
