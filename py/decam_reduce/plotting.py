@@ -168,7 +168,8 @@ def outputs_fp_map(fname_raw, rerun_dir, save=False, outname_extra='',
         dec_center = np.mean(_corners['DEC'])
         _corners = _corners[[0, 1, 2, 3, 0]]
         plt.plot(_corners['RA'], _corners['DEC'], c=color)
-        plt.text(ra_center, dec_center, str(_ccdnum), color=color)
+        _annot = util.ccdnum_to_ccdname(_ccdnum) + ' / ' + str(_ccdnum)
+        plt.text(ra_center + 0.15, dec_center - 0.03, _annot, color=color)
 
     plt.text(np.max(corners['RA']) - 0.2,
              np.min(corners['DEC']) - 0.08, 
