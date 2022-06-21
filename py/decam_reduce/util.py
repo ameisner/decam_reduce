@@ -828,18 +828,30 @@ def dummy_mastercal_hdu(fname):
         _hdul.writeto(outname_tmp)
         os.rename(outname_tmp, fname) # overwrite
 
-def ccdnum_to_ccdname(ccdnum):
+def get_decam_mapper():
     """
-
     """
 
     from lsst.obs.decam import DecamMapper
 
     mapper = DecamMapper()
+
+    return mapper
+
+
+def ccdnum_to_ccdname(ccdnum):
+    """
+
+    """
+
+    mapper = get_decam_mapper()
+
     mapping = mapper.detectorNames
 
     if ccdnum not in mapping.keys():
         print('INVALID CCDNUM VALUE : ', ccdnum)
         assert(False)
 
-    return mapping[ccdnum]
+    ccdname = mapping[ccdnum]
+
+    return ccdname
