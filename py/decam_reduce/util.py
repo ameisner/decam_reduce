@@ -860,13 +860,12 @@ def ccdname_to_ccdnum(ccdname):
     Parameters
     ----------
         ccdname : str
-            CCDNAME like 'S30'. Needs to be a valid DECam CCDNAME,
-            excluding N30.
+            CCDNAME like 'S30'. Needs to be a valid DECam CCDNAME.
 
     Returns
     -------
         ccdnum : int
-            CCDNUM, should be an integer in the range [1, 62], excluding 61.
+            CCDNUM, should be an integer in the range [1, 62].
 
     Notes
     -----
@@ -899,7 +898,7 @@ def ccdnum_to_ccdname(ccdnum):
     Parameters
     ----------
         ccdnum : int
-            CCDNUM, should be an integer in the range [1, 62], excluding 61.
+            CCDNUM, should be an integer in the range [1, 62].
 
     Returns
     -------
