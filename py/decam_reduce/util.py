@@ -19,6 +19,7 @@ from astropy.coordinates import SkyCoord
 import astropy.units as u
 import astropy.io.fits as fits
 from astropy.coordinates import Angle
+import copy
 
 def print_hostname():
     """
@@ -784,9 +785,23 @@ def header_radec_to_decimal(h):
 
 def dummy_mastercal_hdu(fname):
     hdul = fits.open(fname)
-    if len(hdul) == 62:
+
+    if len(hdul) == 61:
+        # assume that this means that CCDNUM=2 is missing AND
+        # CCDNUM = 61 is also missing
         print('REPAIRING MISSING MASTERCAL EXTENSION : ', fname)
-        hdul = fits.open(fname)
+        _hdul = hdul[0:2]
+        _hdul.append(_hdul[1]) #dummy, choice of 1 here shouldn't matter
+        
+        #_hdul.append(hdul[2:])
+        for i in range(2, len(hdul)):
+            _hdul.append(hdul[i])
+        del hdul
+        hdul = copy.deepcopy(_hdul)
+
+    if len(hdul) == 62:
+        # assume this means that CCDNUM=61 is missing
+        print('REPAIRING MISSING MASTERCAL EXTENSION : ', fname)
 
         _hdul = hdul[0:61]
 
@@ -794,5 +809,6 @@ def dummy_mastercal_hdu(fname):
         _hdul.append(hdul[61])
 
         outname_tmp = fname + '.tmp'
+        print(len(_hdul))
         _hdul.writeto(outname_tmp)
         os.rename(outname_tmp, fname) # overwrite
