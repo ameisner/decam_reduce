@@ -279,7 +279,7 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None,
     keep = (nightsum['proc_type'] == 'raw') & \
            (nightsum['prod_type'] == 'image') & \
            (nightsum['obs_type'] == 'object') & \
-           (nightsum['exposure'] >= 1)
+           (nightsum['exposure'] >= min_exptime_s)
 
     if _filter is not None:
         _full_filter_name = full_filter_name(_filter)
@@ -302,6 +302,27 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None,
     result = nightsum[keep]
 
     result = result.sort_values('original_filename')
+
+    return result
+
+def select_raw_flat(nightsum, min_exptime_s=9, _filter='r', n_max=5):
+
+    assert(_filter in ['g', 'r', 'z'])
+
+    par = common.decam_params()
+
+    keep = (nightsum['proc_type'] == 'raw') & \
+           (nightsum['prod_type'] == 'image') & \
+           (nightsum['obs_type'] == 'dome flat') & \
+           (nightsum['exposure'] >= min_exptime_s)
+
+    _full_filter_name = full_filter_name(_filter)
+    keep = np.logical_and(keep, nightsum['ifilter'] == _full_filter_name)
+
+    result = nightsum[keep]
+    result = result.sort_values('original_filename')
+
+    result = result[0:n_max]
 
     return result
 
