@@ -198,6 +198,33 @@ def outputs_fp_map(fname_raw, rerun_dir, save=False, outname_extra='',
     
 def zeropoint_trend(caldat, rerun_dir, _filter, save=False,
                     return_table=False):
+    """
+    Nightly strip chart of the LSST pipeline measured photometric zeropoint.
+
+    Parameters
+    ----------
+        caldat : str
+            Observing night as a string in the format YYYY-MM-DD.
+        rerun_dir : str
+            Relative or full path of the specific LSST pipeline rerun to use.
+        _filter : str
+            Filter name.
+        save: bool, optional
+            Save the resulting plot to PNG? Default is to not save the plot.
+        return_table: bool, optional
+            Return a summary table of the zeropoints and corresponding time
+            stamps? Default is to not return such a table even though it gets
+            generated internally as part of the plot-making process.
+
+    Returns
+    -------
+        t : astropy.table.table.Table
+            Table of zeropoint plus time stamp information. Only returned if
+            return_table=True. By default, return_table=False and nothing is
+            returned.
+
+    """
+
     assert(os.path.exists(rerun_dir))
 
     flist = glob.glob(rerun_dir + '/*/metadata/metadata*.yaml')
