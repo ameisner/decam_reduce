@@ -322,9 +322,27 @@ def select_raw_flat(nightsum, min_exptime_s=9, _filter='r', n_max=5):
     result = nightsum[keep]
     result = result.sort_values('original_filename')
 
-    result = result[0:n_max]
+    _n_max = min(n_max, len(result))
+    result = result[0:_n_max]
 
     return result
+
+def select_raw_zeros(nightsum, n_max=5):
+
+    keep = (nightsum['proc_type'] == 'raw') & \
+           (nightsum['prod_type'] == 'image') & \
+           (nightsum['obs_type'] == 'zero') & \
+           (nightsum['exposure'] == 0)
+
+    result = nightsum[keep]
+
+    result = result.sort_values('original_filename')
+
+    _n_max = min(n_max, len(result))
+    result = result[0:_n_max]
+
+    return result
+
 
 def downselect_zeros(tab):
     """
