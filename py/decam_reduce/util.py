@@ -1005,23 +1005,31 @@ def patch_raw_header(fname):
     if type(hdul[0].header['WINDDIR']) == str:
         hdul[0].header['WINDDIR'] = 1.0 # arbitrary choice...
         modified = True
+        print('WINDDIR MODIFIED')
 
     if type(hdul[0].header['HUMIDITY']) == str:
         hdul[0].header['HUMIDITY'] = 50.0 # arbitrary choice...
         modified = True
+        print('HUMIDITY MODIFIED')
 
     if type(hdul[0].header['PRESSURE']) == str:
         hdul[0].header['PRESSURE'] = 760.0 # 1 atmosphere in torr...
         modified = True
+        print('PRESSURE MODIFIED')
 
     if type(hdul[0].header['DIMMSEE']) == str:
         hdul[0].header['DIMMSEE'] = 1.0 # arbitrary choice...
         modified = True
+        print('DIMMSEE MODIFIED')
 
     if type(hdul[0].header['OUTTEMP']) == str:
         hdul[0].header['OUTTEMP'] = 11.0 # arbitrary choice
         modified = True
+        print('OUTTEMP MODIFIED')
 
     if modified:
         os.remove(fname)
         hdul.writeto(fname)
+        print('RAW HEADER WAS MODIFIED')
+    else:
+        print('NO MODIFICATIONS')
