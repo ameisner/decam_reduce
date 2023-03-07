@@ -984,3 +984,44 @@ def all_ccdnum_list(omit_bad=False):
         del ccdnums[1]
 
     return ccdnums
+
+def patch_raw_header(fname):
+    """
+    Fill in raw header info that if missing can crash the Gen3 LSST pipelines.
+    """
+
+    assert(os.path.exists(fname))
+
+    hdul = fits.open(fname)
+
+    #WINDDIR = 'NaN     '           / [deg] Wind direction (from North)        
+    #HUMIDITY= 'NaN     '           / [%] Ambient relative humidity (outside)   
+    #PRESSURE= 'NaN     '           / [Torr] Barometric pressure (outside)    
+    #DIMMSEE = 'NaN     '           / [arcsec] DIMM Seeing    
+    #OUTTEMP = 'NaN     '           / [deg C] Outside temperature
+
+    modified = False
+
+    if type(hdul[0].header['WINDDIR']) == str:
+        hdul[0].header['WINDDIR'] = 1.0 # arbitrary choice...
+        modified = True
+
+    if type(hdul[0].header['HUMIDITY']) == str:
+        hdul[0].header['HUMIDITY'] = 50.0 # arbitrary choice...
+        modified = True
+
+    if type(hdul[0].header['PRESSURE']) == str:
+        hdul[0].header['PRESSURE'] = 760.0 # 1 atmosphere in torr...
+        modified = True
+
+    if type(hdul[0].header['DIMMSEE']) == str:
+        hdul[0].header['DIMMSEE'] = 1.0 # arbitrary choice...
+        modified = True
+
+    if type(hdul[0].header['OUTTEMP']) == str:
+        hdul[0].header['OUTTEMP'] = 11.0 # arbitrary choice
+        modified = True
+
+    if modified:
+        os.remove(fname)
+        hdul.writeto(fname)
