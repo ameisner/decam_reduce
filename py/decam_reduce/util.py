@@ -307,7 +307,7 @@ def select_raw_science(nightsum, min_exptime_s=None, _filter=None,
 
 def select_raw_flat(nightsum, min_exptime_s=9, _filter='r', n_max=5):
 
-    assert(_filter in ['g', 'r', 'i', 'z'])
+    assert(_filter in ['g', 'r', 'i', 'z', 'Y'])
 
     par = common.decam_params()
 
